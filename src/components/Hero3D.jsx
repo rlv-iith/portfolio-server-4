@@ -1,80 +1,132 @@
-import { useRef, Suspense } from 'react';
+import { useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Stars, Sparkles, Text, Trail } from '@react-three/drei';
+import { Float, Stars, Text, Trail, Line } from '@react-three/drei';
 import * as THREE from 'three';
 
-// 1. THE CAMERA RIG (MAKES IT INTERACTIVE)
+// 1. THE MOUSE RIG (Keeps it interactive)
 function Rig() {
   useFrame((state) => {
-    // Read mouse position (x: -1 to 1, y: -1 to 1)
     const { x, y } = state.mouse;
-    
-    // Smoothly tilt the camera to follow the mouse
-    // "lerp" makes it smooth/lazy instead of jittery
     state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, x * 2, 0.05);
     state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, y * 2, 0.05);
-    
-    // Force camera to always look at the center (The Atom)
     state.camera.lookAt(0, 0, 0);
   });
   return null;
 }
 
-// 2. FLOATING CODE
-function CodeElectron({ text, radius, speed, yOffset, color }) {
-  const ref = useRef();
-  const angle = Math.random() * Math.PI * 2;
+// 2. A SINGLE ATOM RING WITH CODE ELECTRONS
+function AtomRing({ radius, color, rotation, speed, codeSnippets }) {
+  const ringRef = useRef();
+  
+  // Create 'electrons' (Text) associated with this ring
+  const electrons = useMemo(() => {
+    return codeSnippets.map((text, i) => ({
+      text,
+      angle: (i / codeSnippets.length) * Math.PI * 2, // Evenly spread
+      ref: { current: null } // Placeholder ref
+    }));
+  }, [codeSnippets]);
 
   useFrame((state) => {
-    if (!ref.current) return;
+    if (!ringRef.current) return;
+    
+    // Rotate the entire ring group for visual effect
     const t = state.clock.getElapsedTime() * speed;
-    ref.current.position.x = Math.cos(t + angle) * radius;
-    ref.current.position.z = Math.sin(t + angle) * radius;
-    ref.current.position.y = Math.sin(t * 1.5) * 0.5 + yOffset;
-    ref.current.lookAt(state.camera.position);
+    
+    // Update Ring Rotation
+    // ringRef.current.rotation.z = t; // Optional: Spin the ring geometry itself
+
+    // Update Electron Positions along the ring path
+    electrons.forEach((el) => {
+      if (el.ref.current) {
+        // Calculate position on the circle
+        // The ring is already rotated via the group prop, so we just move in local Circle (X/Y)
+        const currentAngle = el.angle - t; 
+        el.ref.current.position.x = Math.cos(currentAngle) * radius;
+        el.ref.current.position.y = Math.sin(currentAngle) * radius;
+        el.ref.current.position.z = 0; // Flat on the ring plane
+
+        // Ensure text is always upright facing camera
+        el.ref.current.quaternion.copy(state.camera.quaternion);
+      }
+    });
   });
 
   return (
-    <Text
-      ref={ref}
-      fontSize={0.25}
-      color={color}
-      anchorX="center"
-      anchorY="middle"
-      font="https://fonts.gstatic.com/s/jetbrainsmono/v13/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0pnF8R-0.woff2"
-    >
-      {text}
-    </Text>
+    <group rotation={rotation} ref={ringRef}>
+      
+      {/* VISUAL RING PATH */}
+      <mesh>
+        <torusGeometry args={[radius, 0.02, 32, 100]} />
+        <meshBasicMaterial color={color} transparent opacity={0.3} />
+      </mesh>
+
+      {/* CODE "ELECTRONS" */}
+      {electrons.map((el, i) => (
+        <group key={i}>
+            <Text
+              ref={(obj) => (el.ref.current = obj)} // Assign ref manually
+              fontSize={0.25}
+              color={color}
+              font="https://fonts.gstatic.com/s/jetbrainsmono/v13/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0pnF8R-0.woff2"
+              anchorX="center"
+              anchorY="middle"
+            >
+              {el.text}
+            </Text>
+        </group>
+      ))}
+    </group>
   );
 }
 
-// 3. THE ATOMIC CORE
-function NuclearCore() {
-  const meshRef = useRef();
-  
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
-    if(meshRef.current) {
-        meshRef.current.rotation.x = t * 0.3;
-        meshRef.current.rotation.y = t * 0.5;
-    }
-  });
-
+// 3. THE MAIN ATOM COMPONENT
+function CodingAtom() {
   return (
-    <group scale={1.2}>
-        <Float speed={5} rotationIntensity={1} floatIntensity={1}>
-            {/* The Reactor Geometry */}
-            <mesh ref={meshRef}>
-                <icosahedronGeometry args={[1, 1]} />
-                <meshBasicMaterial color="#00ffff" wireframe />
-            </mesh>
-            
-            {/* Inner Energy */}
-            <mesh>
-                <sphereGeometry args={[0.8, 16, 16]} />
-                <meshBasicMaterial color="#00ffff" transparent opacity={0.15} />
-            </mesh>
-        </Float>
+    <group scale={1.1}>
+      <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
+        
+        {/* CENTER NUCLEUS */}
+        <mesh>
+          <icosahedronGeometry args={[1, 1]} />
+          <meshBasicMaterial color="#00ffff" wireframe />
+        </mesh>
+        <mesh>
+           <sphereGeometry args={[0.8, 16, 16]} />
+           <meshBasicMaterial color="#00ffff" transparent opacity={0.15} />
+        </mesh>
+
+        {/* ORBIT 1: CHEMISTRY & BASICS (Blue) */}
+        {/* Tilted 60 degrees X */}
+        <AtomRing 
+            radius={3.5} 
+            color="#3b82f6" 
+            rotation={[Math.PI / 3, 0, 0]} 
+            speed={0.5} 
+            codeSnippets={["import numpy", "H2 + O2", "reaction_rate()"]}
+        />
+
+        {/* ORBIT 2: AI & DATA (Purple) */}
+        {/* Tilted -60 degrees X */}
+        <AtomRing 
+            radius={4} 
+            color="#a855f7" 
+            rotation={[-Math.PI / 3, 0, 0]} 
+            speed={0.4} 
+            codeSnippets={["torch.load()", "model.fit()", "optimize"]}
+        />
+
+        {/* ORBIT 3: DEV & SYSTEMS (Cyan) */}
+        {/* Flat Y rotation */}
+        <AtomRing 
+            radius={4.5} 
+            color="#22d3ee" 
+            rotation={[0, Math.PI / 2, 0]} 
+            speed={0.6} 
+            codeSnippets={["npm start", "docker build", "git push"]}
+        />
+
+      </Float>
     </group>
   );
 }
@@ -82,32 +134,19 @@ function NuclearCore() {
 export default function Hero3D() {
   return (
     <div className="absolute inset-0 z-0 w-full h-full">
-      {/* eventSource={document.body} is the SECRET SAUCE. 
-          It tells the 3D scene to listen to the mouse on the WHOLE page, 
-          even if you are hovering over a React button. */}
       <Canvas 
         camera={{ position: [0, 0, 10], fov: 45 }}
-        eventSource={document.body} 
+        eventSource={document.body} // Vital for interactions
       >
-        
-        {/* Adds the interaction */}
-        <Rig />
-
         <Suspense fallback={null}>
-            <NuclearCore />
-            <group rotation={[0.2, 0, 0]}>
-                <CodeElectron text="import atomic" radius={5} speed={0.5} yOffset={1.5} color="#00ffff" />
-                <CodeElectron text="def research():" radius={6} speed={0.4} yOffset={-1.5} color="#c084fc" />
-                <CodeElectron text="return output" radius={4.5} speed={0.6} yOffset={0} color="#34d399" />
-            </group>
+            {/* Interactive Camera Rig */}
+            <Rig />
+            
+            {/* The Atom Scene */}
+            <CodingAtom />
         </Suspense>
 
-        {/* Dense Starfield */}
         <Stars radius={100} depth={50} count={3000} factor={4} saturation={0} fade />
-        
-        {/* Floating Sparkles close to camera */}
-        <Sparkles count={50} scale={10} size={4} speed={0.4} opacity={0.5} color="#ffffff" />
-        
       </Canvas>
     </div>
   );
