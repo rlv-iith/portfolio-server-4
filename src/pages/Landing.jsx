@@ -10,71 +10,77 @@ export default function Landing() {
     { 
       id: 'recruiter', 
       title: "RECRUITER",
-      subtitle: "Corporate View",
-      icon: <Briefcase size={28} />,
-      desc: "ATS Resume, Impact Metrics & Professional Experience.",
-      border: "hover:border-blue-500",
-      shadow: "hover:shadow-blue-500/20"
+      subtitle: "CORPORATE",
+      icon: <Briefcase size={32} />,
+      desc: "Resume, Impact Metrics & Professional Summary.",
+      border: "border-blue-500/50",
+      glow: "group-hover:shadow-[0_0_40px_rgba(59,130,246,0.4)]"
     },
     { 
       id: 'professor', 
       title: "RESEARCHER",
-      subtitle: "Academic View",
-      icon: <FlaskConical size={28} />,
-      desc: "Methodology, Publications, Lab Skills & GPA.",
-      border: "hover:border-emerald-500",
-      shadow: "hover:shadow-emerald-500/20"
+      subtitle: "ACADEMIC",
+      icon: <FlaskConical size={32} />,
+      desc: "Methodology, Publications, Lab Protocols.",
+      border: "border-emerald-500/50",
+      glow: "group-hover:shadow-[0_0_40px_rgba(16,185,129,0.4)]"
     },
     { 
       id: 'tech_head', 
       title: "TECH LEAD",
-      subtitle: "Code View",
-      icon: <Code size={28} />,
-      desc: "System Architecture, GitHub Stack & Live Deploys.",
-      border: "hover:border-purple-500",
-      shadow: "hover:shadow-purple-500/20"
+      subtitle: "DEVELOPER",
+      icon: <Code size={32} />,
+      desc: "GitHub, Architecture Diagrams & Deployment.",
+      border: "border-purple-500/50",
+      glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.4)]"
     },
   ];
 
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden flex flex-col items-center justify-center">
+    <div className="relative w-full h-screen bg-black text-white overflow-hidden flex flex-col items-center justify-center">
       
-      {/* 1. 3D Background - Pushed behind everything */}
-      <div className="absolute inset-0 z-0 opacity-60">
+      {/* 3D Background */}
+      <div className="absolute inset-0 z-0">
         <Hero3D />
       </div>
 
-      {/* 2. Gradient Overlay to darken edges */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80 z-0 pointer-events-none" />
+      {/* Vignette Overlay (Darkens the corners) */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_10%,black_100%)] z-0 pointer-events-none" />
 
-      {/* 3. Main Interface */}
-      <div className="z-10 w-full max-w-7xl px-6 flex flex-col items-center justify-center h-full">
+      {/* MAIN CONTENT CONTAINER */}
+      <div className="z-10 w-full max-w-7xl px-4 flex flex-col items-center gap-12">
         
-        {/* Header Section */}
+        {/* HEADER SECTION */}
         <motion.div 
-          initial={{ opacity: 0, y: -30 }}
+          initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12 md:mb-20"
+          className="text-center flex flex-col items-center"
         >
-          <p className="text-blue-400 tracking-[0.3em] text-xs md:text-sm font-bold mb-4 uppercase glow-blue">
-            System Online • Portfolio v4.0
-          </p>
-          <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter mb-2 uppercase drop-shadow-2xl">
-            Ramuni Lalith
+          <div className="text-blue-400 tracking-[0.5em] text-xs font-bold mb-6 uppercase glow-text">
+            System Online • v4.0
+          </div>
+          
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white mb-2 uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] brand-font">
+            RAMUNI LALITH
           </h1>
-          <h2 className="text-2xl md:text-4xl font-bold text-gray-500 tracking-tight">
-            Vishnu
+          
+          <h2 className="text-3xl md:text-4xl font-light text-gray-400 tracking-[0.2em] mb-8 brand-font">
+            VISHNU
           </h2>
-          <div className="mt-6 flex flex-wrap justify-center gap-4 text-xs md:text-sm text-gray-400 font-mono">
-            <span className="px-3 py-1 border border-white/10 rounded-full">IND. CHEMISTRY</span>
-            <span className="px-3 py-1 border border-white/10 rounded-full">AI ARCHITECT</span>
-            <span className="px-3 py-1 border border-white/10 rounded-full">3D DEV</span>
+
+          {/* Tags - Now with explicit margins */}
+          <div className="flex flex-wrap justify-center gap-4 mt-4">
+            {['IND. CHEMISTRY', 'AI ARCHITECT', '3D DEV'].map((tag) => (
+              <span key={tag} className="px-4 py-2 border border-white/20 rounded-full text-xs font-mono text-gray-300 bg-black/40 backdrop-blur-md">
+                {tag}
+              </span>
+            ))}
           </div>
         </motion.div>
 
-        {/* Card Grid Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
+        {/* CARDS SECTION - Switched to Flex Wrap for reliability */}
+        <div className="flex flex-wrap justify-center gap-6 w-full">
           {cards.map((card, index) => (
             <motion.button
               key={card.id}
@@ -83,47 +89,41 @@ export default function Landing() {
               transition={{ delay: index * 0.15 }}
               onClick={() => setRole(card.id)}
               className={`
-                glass-card group relative p-6 md:p-8 rounded-xl text-left transition-all duration-300
-                hover:scale-[1.02] hover:-translate-y-1 ${card.border} hover:bg-white/5
+                group relative w-full md:w-[350px] min-h-[250px] p-8 
+                bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl text-left 
+                transition-all duration-300 hover:-translate-y-2 hover:bg-white/5
+                ${card.glow}
               `}
             >
-              {/* Hover Glow Effect */}
-              <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent)] ${card.shadow}`} />
-              
-              <div className="relative z-10 flex flex-col h-full justify-between gap-6">
-                
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                  <div className="p-3 bg-white/5 rounded-lg border border-white/10 group-hover:bg-white/10 transition-colors">
-                    <span className="text-white group-hover:scale-110 block transition-transform duration-300">
-                      {card.icon}
-                    </span>
+              {/* Colored Top Border */}
+              <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-50`} />
+
+              <div className="flex flex-col h-full justify-between">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/10 group-hover:bg-white/10 transition-colors text-white">
+                    {card.icon}
                   </div>
-                  <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold border border-white/5 px-2 py-1 rounded">
+                  <span className="text-[10px] uppercase tracking-widest text-gray-400 border border-white/10 px-2 py-1 rounded">
                     {card.subtitle}
                   </span>
                 </div>
 
-                {/* Body */}
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-2 font-mono group-hover:text-blue-200 transition-colors">
+                  <h3 className="text-2xl font-bold text-white mb-2 brand-font">
                     {card.title}
                   </h3>
-                  <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-300">
+                  <p className="text-sm text-gray-300 leading-relaxed font-sans">
                     {card.desc}
                   </p>
                 </div>
 
-                {/* Footer / CTA */}
-                <div className="flex items-center text-xs font-bold tracking-widest text-gray-600 group-hover:text-white transition-colors pt-4 border-t border-white/5">
-                  INITIALIZE 
-                  <ArrowRight size={14} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center text-xs font-bold tracking-widest text-blue-400 pt-6 mt-4 border-t border-white/5 group-hover:text-white transition-colors">
+                  INITIALIZE <ArrowRight size={14} className="ml-2 group-hover:translate-x-2 transition-transform" />
                 </div>
               </div>
             </motion.button>
           ))}
         </div>
-        
       </div>
     </div>
   );

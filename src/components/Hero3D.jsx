@@ -13,7 +13,7 @@ function AnimatedShape() {
 
   return (
     <Float speed={2} rotationIntensity={2} floatIntensity={1}>
-      <mesh ref={meshRef} scale={2.5}>
+      <mesh ref={meshRef} scale={3.8}>
         <icosahedronGeometry args={[1, 1]} />
         <meshStandardMaterial 
           color="#4f46e5" 
@@ -29,7 +29,7 @@ function AnimatedShape() {
 export default function Hero3D() {
   return (
     <div className="absolute inset-0 z-0">
-      <Canvas camera={{ position: [0, 0, 5] }}>
+      <Canvas camera={{ position: [0, 0, 7] }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1.5} color="#8b5cf6" />
         <pointLight position={[-10, -10, -10]} intensity={1.5} color="#06b6d4" />

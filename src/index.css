@@ -6,28 +6,19 @@
 
 @layer base {
   body {
-    background-color: #030303;
+    background-color: #000000;
     color: #ffffff;
-    font-family: 'Space Grotesk', sans-serif; /* Default Font */
-    margin: 0;
-    overflow-x: hidden; /* No side scrolling */
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
   }
   
-  /* The "Sci-Fi" Header Font */
-  h1, h2, h3, .brand-font {
+  .brand-font {
     font-family: 'Orbitron', sans-serif;
   }
 }
 
-/* Custom Neon Glow Utilities that definitely work */
 @layer utilities {
-  .glow-blue {
-    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
-  }
-  .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  .glow-text {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
   }
 }
