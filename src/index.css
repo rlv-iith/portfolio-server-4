@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Space+Grotesk:wght@300;400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #030303;
+    color: #ffffff;
+    font-family: 'Space Grotesk', sans-serif; /* Default Font */
+    margin: 0;
+    overflow-x: hidden; /* No side scrolling */
+  }
+  
+  /* The "Sci-Fi" Header Font */
+  h1, h2, h3, .brand-font {
+    font-family: 'Orbitron', sans-serif;
+  }
+}
+
+/* Custom Neon Glow Utilities that definitely work */
+@layer utilities {
+  .glow-blue {
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
