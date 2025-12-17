@@ -9,16 +9,13 @@
     background-color: #000000;
     color: #ffffff;
     font-family: 'Space Grotesk', sans-serif;
-    overflow-x: hidden;
-  }
-  
-  .brand-font {
-    font-family: 'Orbitron', sans-serif;
   }
 }
 
-@layer utilities {
-  .glow-text {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-  }
+/* Hard-coded glass fallback to guarantee the look */
+.glass-panel {
+  background-color: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }

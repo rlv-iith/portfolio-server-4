@@ -80,50 +80,48 @@ export default function Landing() {
         </motion.div>
 
         {/* CARDS SECTION - Switched to Flex Wrap for reliability */}
-        <div className="flex flex-wrap justify-center gap-6 w-full">
-          {cards.map((card, index) => (
-            <motion.button
-              key={card.id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.15 }}
-              onClick={() => setRole(card.id)}
-              className={`
-                group relative w-full md:w-[350px] min-h-[250px] p-8 
-                bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl text-left 
-                transition-all duration-300 hover:-translate-y-2 hover:bg-white/5
-                ${card.glow}
-              `}
-            >
-              {/* Colored Top Border */}
-              <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-50`} />
+        <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 w-full mt-8">
+  {cards.map((card, index) => (
+    <motion.button
+      key={card.id}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.15 }}
+      onClick={() => setRole(card.id)}
+      className={`
+        glass-panel group relative flex-1 min-w-[300px] min-h-[250px] p-8 
+        rounded-2xl text-left transition-all duration-300 
+        hover:-translate-y-2 hover:bg-white/10 ${card.border} border
+      `}
+    >
+      {/* ... keeping your inner content the same ... */}
+      <div className="flex flex-col h-full justify-between">
+          <div className="flex items-start justify-between mb-6">
+            <div className="p-4 bg-white/5 rounded-xl text-white">
+              {card.icon}
+            </div>
+            <span className="text-[10px] uppercase tracking-widest text-gray-400 border border-white/20 px-2 py-1 rounded">
+              {card.subtitle}
+            </span>
+          </div>
 
-              <div className="flex flex-col h-full justify-between">
-                <div className="flex items-start justify-between mb-6">
-                  <div className="p-4 bg-white/5 rounded-xl border border-white/10 group-hover:bg-white/10 transition-colors text-white">
-                    {card.icon}
-                  </div>
-                  <span className="text-[10px] uppercase tracking-widest text-gray-400 border border-white/10 px-2 py-1 rounded">
-                    {card.subtitle}
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-2 brand-font">
-                    {card.title}
-                  </h3>
-                  <p className="text-sm text-gray-300 leading-relaxed font-sans">
-                    {card.desc}
-                  </p>
-                </div>
-
-                <div className="flex items-center text-xs font-bold tracking-widest text-blue-400 pt-6 mt-4 border-t border-white/5 group-hover:text-white transition-colors">
-                  INITIALIZE <ArrowRight size={14} className="ml-2 group-hover:translate-x-2 transition-transform" />
-                </div>
-              </div>
-            </motion.button>
-          ))}
-        </div>
+          <div>
+            <h3 className="text-2xl font-bold text-white mb-2 font-sci">
+              {card.title}
+            </h3>
+            <p className="text-sm text-gray-300 leading-relaxed">
+              {card.desc}
+            </p>
+          
+          </div>
+          
+          <div className="text-blue-400 text-xs font-bold pt-4 mt-auto">
+             INITIALIZE_
+          </div>
+      </div>
+    </motion.button>
+  ))}
+</div>
       </div>
     </div>
   );
