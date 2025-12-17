@@ -4,19 +4,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+}
+
 @layer utilities {
-  /* Sharper, brighter glow for the name */
-  .glow-text {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 
-                 0 0 20px rgba(59, 130, 246, 0.5);
+  /* Ensuring Orbitron is forced for headers */
+  .brand-font {
+    font-family: 'Orbitron', sans-serif !important;
   }
   
-  /* Darker background for the cards to boost readability */
+  .glow-text {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 
+                 0 0 30px rgba(59, 130, 246, 0.4);
+  }
+
   .glass-panel {
-    background-color: rgba(10, 10, 10, 0.85); /* Increased opacity (was 0.6) */
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* Dropshadow to lift card off bg */
+    background-color: rgba(15, 15, 15, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   }
 }
