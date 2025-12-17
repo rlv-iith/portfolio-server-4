@@ -49,39 +49,45 @@ export default function Landing() {
       </div>
 
       {/* Vignette Overlay */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_100%)] z-0 pointer-events-none opacity-80" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_100%)] z-0 pointer-events-none opacity-40" />
 
       {/* MAIN CONTENT CONTAINER */}
       <div className="z-10 w-full max-w-7xl px-4 flex flex-col items-center gap-12">
         
         {/* HEADER SECTION */}
         <motion.div 
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center flex flex-col items-center"
-        >
-          <div className="text-blue-400 tracking-[0.5em] text-xs font-bold mb-6 uppercase glow-text">
-            System Online • v4.0
-          </div>
-          
-          <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white mb-2 uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] brand-font">
-            Lalith Vishnu
-          </h1>
-          
-          <h2 className="text-3xl md:text-4xl font-normal text-gray-200 tracking-[0.2em] mb-8 brand-font">
-            Ramuni
-          </h2>
+  initial={{ opacity: 0, y: -50 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8 }}
+  className="text-center flex flex-col items-center mb-8 relative z-20"
+>
+  <div className="text-blue-400 tracking-[0.5em] text-[10px] md:text-xs font-bold mb-4 uppercase opacity-80">
+    System Online • v4.0
+  </div>
+  
+  {/* Glowing Big Name */}
+  <h1 className="text-6xl md:text-9xl font-black tracking-tighter text-white mb-0 uppercase brand-font drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+    LALITH VISHNU
+  </h1>
+  
+  {/* Subtle First Name */}
+  <h2 className="text-xl md:text-2xl font-light text-gray-400 tracking-[0.4em] mb-8 font-sans uppercase">
+    Ramuni
+  </h2>
 
-          {/* Tags */}
-          <div className="flex flex-wrap justify-center gap-4 mt-4">
-            {['IND. CHEMISTRY', 'AI ARCHITECT', '3D DEV'].map((tag) => (
-              <span key={tag} className="px-4 py-2 border border-white/20 rounded-full text-xs font-mono text-white bg-white/10 backdrop-blur-md">
-                {tag}
-              </span>
-            ))}
-          </div>
-        </motion.div>
+  {/* The Tags */}
+  <div className="flex flex-wrap justify-center gap-4">
+    {[
+      { label: 'IND. CHEMISTRY', border: 'border-blue-500/30' },
+      { label: 'AI ARCHITECT', border: 'border-purple-500/30' },
+      { label: '3D DEV', border: 'border-emerald-500/30' }
+    ].map((tag) => (
+      <span key={tag.label} className={`px-4 py-2 border ${tag.border} rounded-full text-[10px] md:text-xs font-mono text-gray-300 bg-black/40 backdrop-blur-md`}>
+        {tag.label}
+      </span>
+    ))}
+  </div>
+</motion.div>
 
         {/* CARDS SECTION */}
         <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 w-full mt-8">
