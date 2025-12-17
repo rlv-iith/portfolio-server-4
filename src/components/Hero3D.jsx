@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Sphere, MeshDistortMaterial, Sparkles, Stars, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -8,55 +8,68 @@ function CyberCore() {
   const meshRef = useRef(null);
   const materialRef = useRef(null);
   const [hovered, setHover] = useState(false);
+  
+  // Gets the screen size in "3D units" (not pixels)
+  const { viewport } = useThree();
+  
+  // MOBILE CHECK: If screen width < 5 units, it's mobile.
+  // We shrink the scale: Desktop = 2.0, Mobile = 1.3
+  const responsiveScale = viewport.width < 5 ? 1.3 : 2.2;
 
   useFrame((state) => {
     if (!meshRef.current || !materialRef.current) return;
 
-    // Mouse Interaction vars
+    // A. MOUSE INTERACTION
+    // Use the mouse position to drive rotation and color
     const { x, y } = state.mouse;
-    const time = state.clock.getElapsedTime();
 
-    // A. Rotation: Look at mouse
-    meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, y * 0.2, 0.1);
-    meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, x * 0.2, 0.1);
+    // Smooth Look-At Logic
+    meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, y * 0.4, 0.05);
+    meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, x * 0.4, 0.05);
 
-    // B. Color Morphing: Change color based on Mouse X position
-    // If mouse is left: Blue. If mouse is right: Purple.
-    const colorA = new THREE.Color('#0ea5e9'); // Sky Blue
-    const colorB = new THREE.Color('#a855f7'); // Purple
+    // B. COLOR MORPH LOGIC (Verified)
+    // Map mouse X (-1 to 1) -> (0 to 1) for color mixing
+    const colorMixFactor = (x + 1) / 2;
     
-    // Smoothly mix the colors
-    const targetColor = colorA.clone().lerp(colorB, (x + 1) / 2); 
+    // Define your colors
+    const blue = new THREE.Color('#3b82f6');  // Recruiter Blue
+    const purple = new THREE.Color('#a855f7'); // Tech Purple
+    const emerald = new THREE.Color('#10b981'); // Academic Green (Optional mix)
+
+    // Create a target color that mixes based on position
+    // If you go far right (Tech), it turns Purple. Left (Recruiter) = Blue.
+    const targetColor = blue.clone().lerp(purple, colorMixFactor);
+
+    // Smoothly transition the actual material color
     materialRef.current.color.lerp(targetColor, 0.05);
 
-    // C. Breathing Effect: Change distortion speed
-    // If hovered, it moves faster!
+    // C. HOVER / DISTORTION
     materialRef.current.distort = THREE.MathUtils.lerp(materialRef.current.distort, hovered ? 0.6 : 0.3, 0.05);
-    materialRef.current.speed = hovered ? 4 : 1.5;
   });
 
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={0.2}>
       <Sphere 
         ref={meshRef} 
-        args={[1.8, 64, 64]} // High detail sphere
+        args={[1, 64, 64]} 
+        // IMPORTANT: We explicitly scale based on screen width
+        scale={responsiveScale}
         onPointerOver={() => setHover(true)}
         onPointerOut={() => setHover(false)}
-        scale={2}
       >
         <MeshDistortMaterial
           ref={materialRef}
-          color="#4f46e5"
+          color="#3b82f6"
           attach="material"
-          distort={0.4} // How "bumpy" it is
-          speed={2}     // How fast it ripples
+          distort={0.4}
+          speed={2}
           roughness={0.2}
-          metalness={0.9} // Make it look like liquid chrome
+          metalness={0.9}
         />
       </Sphere>
       
-      {/* Outer Glow Ring */}
-      <mesh scale={4.5} rotation={[Math.PI / 2.5, 0, 0]}>
+      {/* Outer Ring - Also Scales */}
+      <mesh scale={responsiveScale * 2.2} rotation={[Math.PI / 2.5, 0, 0]}>
         <torusGeometry args={[1, 0.01, 16, 100]} />
         <meshBasicMaterial color="white" transparent opacity={0.1} />
       </mesh>
@@ -64,12 +77,10 @@ function CyberCore() {
   );
 }
 
-// 2. CAMERA RIG (Moves the whole world slightly)
 function CameraRig() {
   useFrame((state) => {
-    // Moves camera gently based on mouse pos
-    state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, state.mouse.x * 2, 0.05);
-    state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, state.mouse.y * 2, 0.05);
+    state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, state.mouse.x * 0.5, 0.05);
+    state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, state.mouse.y * 0.5, 0.05);
     state.camera.lookAt(0, 0, 0);
   });
   return null;
@@ -77,24 +88,26 @@ function CameraRig() {
 
 export default function Hero3D() {
   return (
-    <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
-      <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
-        
-        {/* Cinematic Lighting */}
-        <ambientLight intensity={0.2} />
-        {/* Blue Light Left */}
-        <pointLight position={[-10, 0, 10]} intensity={3} color="#3b82f6" /> 
-        {/* Purple Light Right */}
-        <pointLight position={[10, 0, 10]} intensity={3} color="#a855f7" />  
-        
-        {/* Components */}
+    <div className="absolute inset-0 z-0 w-full h-full">
+      {/* 
+        CRITICAL FIX: eventSource={document.body} 
+        This tells the 3D scene: "Listen to the mouse EVERYWHERE on the page, 
+        even if the user is hovering over a button or text."
+      */}
+      <Canvas 
+        camera={{ position: [0, 0, 10], fov: 45 }}
+        eventSource={document.body}
+        eventPrefix="client"
+      >
+        <ambientLight intensity={0.5} />
+        <pointLight position={[-10, 0, 10]} intensity={2} color="#3b82f6" />
+        <pointLight position={[10, 0, 10]} intensity={2} color="#a855f7" />
+
         <CameraRig />
         <CyberCore />
 
-        {/* Space Dust */}
+        {/* Dense Starfield for Coolness */}
         <Stars radius={100} depth={50} count={3000} factor={4} saturation={0} fade speed={1} />
-        <Sparkles count={80} scale={10} size={2} speed={0.4} opacity={0.5} color="#cbd5e1" />
-        
       </Canvas>
     </div>
   );
