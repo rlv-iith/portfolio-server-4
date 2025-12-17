@@ -49,7 +49,7 @@ export default function Landing() {
       </div>
 
       {/* Vignette Overlay */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_100%)] z-0 pointer-events-none opacity-40" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_100%)] z-0 pointer-events-none opacity-20" />
 
       {/* MAIN CONTENT CONTAINER */}
       <div className="z-10 w-full max-w-7xl px-4 flex flex-col items-center gap-12">
@@ -65,12 +65,11 @@ export default function Landing() {
     System Online • v4.0
   </div>
   
-  {/* Glowing Big Name */}
-  <h1 className="text-6xl md:text-9xl font-black tracking-tighter text-white mb-0 uppercase brand-font drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+  {/* FIXED TYPOGRAPHY: Changed tracking-tighter to tracking-widest */}
+  <h1 className="text-6xl md:text-8xl font-black tracking-widest text-white mb-2 uppercase brand-font drop-shadow-[0_0_35px_rgba(59,130,246,0.6)]">
     LALITH VISHNU
   </h1>
   
-  {/* Subtle First Name */}
   <h2 className="text-xl md:text-2xl font-light text-gray-400 tracking-[0.4em] mb-8 font-sans uppercase">
     Ramuni
   </h2>
@@ -88,7 +87,6 @@ export default function Landing() {
     ))}
   </div>
 </motion.div>
-
         {/* CARDS SECTION */}
         <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 w-full mt-8">
           {cards.map((card, index) => (
