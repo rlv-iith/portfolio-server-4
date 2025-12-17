@@ -66,17 +66,17 @@ export default function Landing() {
           </div>
           
           <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white mb-2 uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] brand-font">
-            RAMUNI LALITH
+            Lalith Vishnu
           </h1>
           
-          <h2 className="text-3xl md:text-4xl font-light text-gray-400 tracking-[0.2em] mb-8 brand-font">
-            VISHNU
+          <h2 className="text-3xl md:text-4xl font-normal text-gray-200 tracking-[0.2em] mb-8 brand-font">
+            Ramuni
           </h2>
 
           {/* Tags */}
           <div className="flex flex-wrap justify-center gap-4 mt-4">
             {['IND. CHEMISTRY', 'AI ARCHITECT', '3D DEV'].map((tag) => (
-              <span key={tag} className="px-4 py-2 border border-white/20 rounded-full text-xs font-mono text-gray-300 bg-black/60 backdrop-blur-md">
+              <span key={tag} className="px-4 py-2 border border-white/20 rounded-full text-xs font-mono text-white bg-white/10 backdrop-blur-md">
                 {tag}
               </span>
             ))}
