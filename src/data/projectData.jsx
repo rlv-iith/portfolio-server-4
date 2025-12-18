@@ -6,7 +6,7 @@ export const content = {
     name: "Lalith Vishnu",
     email: "ic23btech11016@iith.ac.in",
     github: "https://github.com/rlv-iith",
-    linkedin: "https://linkedin.com/in/ramuni-lalith-vishnu"
+    linkedin: "https://www.linkedin.com/in/ramuni-lalith-vishnu-4143ab299/"
   },
 
   // 1. DASHBOARD HEADER INFO (Based on Role)

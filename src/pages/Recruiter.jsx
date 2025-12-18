@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRole } from '../context/RoleContext';
 import { content } from '../data/projectData';
-import { ArrowLeft, ExternalLink, Github, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Github, ChevronRight, FileText } from 'lucide-react';
 
 export default function Recruiter() {
   const { setRole } = useRole();
@@ -67,6 +67,16 @@ export default function Recruiter() {
             </div>
         </div>
         <div className="hidden md:flex items-center gap-6 text-xs tracking-widest text-gray-500 font-bold">
+            {/* ACTIVE RESUME BUTTON */}
+            <a 
+              href="/Lalith_Vishnu_Resume.pdf" 
+              download="Lalith_Vishnu_Resume.pdf"
+              className="flex items-center gap-2 text-blue-400 hover:text-white transition-colors border border-blue-500/30 px-3 py-1.5 rounded bg-blue-500/10 hover:bg-blue-500/20"
+            >
+              <FileText size={14} />
+              <span>DOWNLOAD_CV</span>
+            </a>
+            
             <a href={content.personal.github} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">GITHUB</a>
             <a href={content.personal.linkedin} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">LINKEDIN</a>
         </div>
