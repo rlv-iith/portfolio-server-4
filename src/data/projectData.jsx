@@ -15,7 +15,7 @@ export const content = {
   headers: {
     recruiter: {
       title: "CANDIDATE PROFILE",
-      tagline: "Bridging Hard Science & Software Engineering.",
+      tagline: "Building scalable AI applications and data-driven systems.",
       bio: "IIT Hyderabad Undergraduate (Industrial Chemistry + CS). Built MCP server infrastructure at Stremly, researching at IISc Bangalore, and shipped end-to-end AI pipelines — from containerized ML models to LLM agent tooling.",
       color: "text-blue-400",
       border: "border-blue-500/50",
@@ -146,9 +146,9 @@ export const content = {
     ],
 
     skills: {
-      technical: ["Python", "C++", "JavaScript (React/Node)", "SQL", "MATLAB", "Docker", "Git/GitHub"],
-      ai_genai: ["Llama 3.2 (Local SLMs)", "RAG Pipelines", "LangChain", "MCP (Model Context Protocol)", "XGBoost", "SHAP", "Quantization (GGUF)"],
-      tools: ["Blender (Geometry Nodes)", "Solid Edge", "LaTeX", "Adobe Suite", "Linux/Bash"]
+      core:    ["Python", "SQL", "C++"],
+      ai_data: ["XGBoost", "RAG Pipelines", "LangChain", "SHAP"],
+      systems: ["Docker", "REST APIs", "Git/GitHub"]
     },
 
     hackathons: [

@@ -92,7 +92,7 @@ export default function Landing() {
           <h1 className="text-6xl md:text-8xl font-black tracking-widest text-white mb-2 uppercase brand-font drop-shadow-[0_0_35px_rgba(59,130,246,0.6)]">LALITH VISHNU</h1>
           <h2 className="text-xl md:text-2xl font-light text-gray-400 tracking-[0.4em] mb-8 font-sans uppercase">Ramuni</h2>
           <div className="flex flex-wrap justify-center gap-4">
-            {[ 'IND. CHEMISTRY', 'AI ARCHITECT', '3D DEV' ].map((label) => (
+            {[ 'AI Systems Engineer', 'IIT Hyderabad' ].map((label) => (
               <span key={label} className="px-4 py-2 border border-white/20 rounded-full text-[10px] md:text-xs font-mono text-gray-300 bg-black/40 backdrop-blur-md">{label}</span>
             ))}
           </div>

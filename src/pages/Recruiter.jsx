@@ -45,8 +45,8 @@ export default function Recruiter() {
   const projects = content.projects;
 
   // These are now safe and will not crash
-  const technicalSkills = resume.skills.technical || [];
-  const secondarySkills = [...(resume.skills.ai_genai || []), ...(resume.skills.tools || [])];
+  const technicalSkills = resume.skills.core || [];
+  const secondarySkills = [...(resume.skills.ai_data || []), ...(resume.skills.systems || [])];
 
 
   return (
@@ -115,7 +115,7 @@ export default function Recruiter() {
                 <div className="p-6 bg-blue-900/5 border border-blue-500/20 rounded-xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-50 transition-opacity"><Code /></div>
                     <h3 className="text-blue-400 font-bold mb-4 uppercase text-xs tracking-widest">
-                         Technical Arsenal
+                         Core
                     </h3>
                     <div className="flex flex-wrap gap-2">
                         {technicalSkills.map(s => (
@@ -126,7 +126,7 @@ export default function Recruiter() {
                 <div className="p-6 bg-white/5 border border-white/10 rounded-xl relative overflow-hidden group">
                      <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-50 transition-opacity"><Cpu /></div>
                     <h3 className="text-emerald-400 font-bold mb-4 uppercase text-xs tracking-widest">
-                         AI & GenAI Core
+                         AI & Systems
                     </h3>
                     <div className="flex flex-wrap gap-2">
                         {secondarySkills.map(s => (
