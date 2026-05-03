@@ -1,51 +1,59 @@
-import { Briefcase, Code, FlaskConical } from 'lucide-react';
+import { Briefcase, Code, FlaskConical, Zap } from 'lucide-react';
 
 export const content = {
   // Shared Personal Info
   personal: {
-    name: "Lalith Vishnu",
+    name: "Ramuni Lalith Vishnu",
     email: "ic23btech11016@iith.ac.in",
     github: "https://github.com/rlv-iith",
     linkedin: "https://www.linkedin.com/in/ramuni-lalith-vishnu-4143ab299/",
-    photo: "/images/Profile.JPG"
+    photo: "/images/Profile.JPG" // Ensure this image exists in public/images/
   },
 
-  // 1. DASHBOARD HEADER INFO
+  // ... (keep all the headers and resume data from the previous version) ...
+
   headers: {
     recruiter: {
       title: "CANDIDATE PROFILE",
-      tagline: "High-Impact Engineer ready for deployment.",
-      bio: "IIT Hyderabad Undergraduate with a unique hybrid profile in Industrial Chemistry and Computer Science. Proven track record of optimizing lab workflows by 30% via code and building full-stack AI solutions.",
+      tagline: "Bridging Hard Science & Software Engineering.",
+      bio: "IIT Hyderabad Undergraduate (Industrial Chemistry + CS). Built MCP server infrastructure at Stremly, researching at IISc Bangalore, and shipped end-to-end AI pipelines — from containerized ML models to LLM agent tooling.",
       color: "text-blue-400",
       border: "border-blue-500/50",
       icon: <Briefcase />
     },
     professor: {
-      title: "RESEARCH PORTFOLIO",
-      tagline: "Translational Research: Chemistry + Applied AI.",
-      bio: "Undergraduate Researcher focusing on Heterogeneous Catalysis and Electrochemical Energy. Experience with Dr. Narendra Kurra (ElectroChem Group) and synthetic data generation for LiDAR point clouds.",
+      title: "RESEARCH FELLOW",
+      tagline: "Molecular Electronics & Quantum Chemistry.",
+      bio: "Research Intern at IISc Bangalore (Single Molecular Science Lab). Focused on Heterogeneous Catalysis, Electrochemical Energy, and applying Generative AI (Llama 3.2) to scientific workflows.",
       color: "text-emerald-400",
       border: "border-emerald-500/50",
       icon: <FlaskConical />
     },
     tech_head: {
-      title: "DEV_LOG // V4.0",
-      tagline: "Architecture, Stacks, and Containerization.",
-      bio: "Full-Stack Developer & AI Architect. Expert in converting manual workflows into Python scripts, Dockerizing ML pipelines, and building Agents with LangChain & OpenAI.",
+      title: "SYSTEM ARCHITECT",
+      tagline: "DevOps, GenAI & Full-Stack Systems.",
+      bio: "Expert in building production-ready AI Agents (RAG pipelines). Skilled in Dockerizing microservices, managing Synthetic Data pipelines with Blender API, and deploying scalable REST APIs for ML inference.",
       color: "text-purple-400",
       border: "border-purple-500/50",
       icon: <Code />
+    },
+    catalyst: {
+      title: "R&D SYSTEMS ENGINEER",
+      tagline: "From First Principles to Production Scale.",
+      bio: "Synthesizing deep knowledge of physical sciences with AI architecture to build novel systems. Focused on Energy, Quantum, and automating complex scientific discovery with intelligent agents.",
+      color: "text-amber-400",
+      border: "border-amber-500/50",
+      icon: <Zap />
     }
   },
 
-  // 2. CV DATA SECTION (COMPLETE)
   resume: {
     education: [
       {
-        degree: "B.Tech Industrial Chemistry",
+        degree: "B.Tech Industrial Chemistry (Minor in Civil Eng)",
         school: "IIT Hyderabad",
         year: "2023 - 2027",
-        score: "CGPA: 7.79",
+        score: "CGPA: 7.99",
         id: "iith"
       },
       {
@@ -57,130 +65,159 @@ export const content = {
       }
     ],
 
-    // Only REAL jobs/internships go here
     experience: [
       {
+        role: "AI Systems Intern",
+        company: "Stremly (AI Startup)",
+        duration: "Apr 2026 – Jun 2026",
+        desc: [
+          "Built backend systems to let LLMs interact with tools like Slack and Jira using a standard interface (MCP).",
+          "Added Redis-based monitoring to track service health and reliability.",
+          "Implemented HMAC-based authentication to secure API communication between services.",
+          "Designed async request handling to manage multiple tool calls and avoid race conditions."
+        ]
+      },
+      {
         role: "Research Intern",
-        company: "ElectroChem Materials Group",
+        company: "Indian Institute of Science (IISc), Bangalore",
+        duration: "Dec 2025 – Apr 2026",
+        desc: [
+          "Developed a new setup to measure thermopower in molecular junctions.",
+          "Built hardware systems for temperature-controlled experiments.",
+          "Wrote Python code to control instruments and automate data collection.",
+          "Used SEM imaging to analyze fabricated devices."
+        ]
+      },
+      {
+        role: "Safety Intern",
+        company: "Laboratory Chemical Safety (IITH)",
+        duration: "July 2025 – Nov 2025",
+        desc: [
+          "Refined and updated the Institute Safety Manual under the Safety Committee.",
+          "Streamlined documentation protocols for hazardous material handling."
+        ]
+      },
+      {
+        role: "Research Intern",
+        company: "ElectroChem Materials Group (IITH)",
         duration: "May 2024 – Dec 2024",
         desc: [
-          "Developed custom software to automate AxiDraw machines for precise surface cutting and material deposition.",
-          "Collaborated with 2 Ph.D. scholars on Micro-superconductors; contributed to a research paper currently under publication.",
-          "Designed prototype devices with ±0.005 precision, reducing experiment time by 30%."
+          "Automated an AxiDraw machine using Python & G-Code for precise electrochemical deposition (±0.005 inches).",
+          "Collaborated with Ph.D. scholars on Micro-superconductors; contributed to a paper currently under review.",
+          "Designed prototype devices using Solid Edge to reduce experiment turnaround time by 30%."
         ]
       }
     ],
 
-    // Workshop goes here
     certifications: [
       {
-        title: "IBM SkillBuild: From Learner to Builder",
+        title: "IBM SkillBuild: AI Agent Architect",
         issuer: "IBM",
-        desc: "AI Agent Architect Capstone. Built a RAG pipeline to prevent model hallucinations."
+        type: "Online Course",
+        desc: "Capstone Project: Built a functional AI Agent with RAG architecture to prevent hallucinations."
       },
       {
         title: "Patent Filing & Prior Art Search",
         issuer: "IISc Bangalore | MoE India",
-        desc: "Practical approach to intellectual property rights and search mechanisms."
+        type: "Workshop",
+        desc: "Workshop on Intellectual Property Rights and patent search mechanisms."
       }
     ],
 
-    // The "PoR" Section
     responsibilities: [
+      {
+        role: "Outbound & PR Coordinator",
+        org: "International Relations Cell – IITH",
+        year: "2025–26",
+        desc: "Facilitating global academic partnerships and managing public relations for the institute."
+      },
       {
         role: "Operations Coordinator",
         org: "Tinkerers' Lab – IITH",
         year: "2024–25",
-        desc: "Oversaw operations for 80+ members. Managed ₹18L worth of inventory and lab infrastructure."
+        desc: "Managed an 80+ member team and ₹18L worth of inventory. Played a key role in BUILD-2024 incubator."
       },
       {
         role: "Core Team Member",
         org: "Torque (Auto Club) – IITH",
         year: "2024–25",
-        desc: "Project Lead for Internal Combustion RC Car. Battery Domain Head for Mars Rover Challenge (Goa 2024)."
-      },
-      {
-        role: "Class Representative",
-        org: "Dept. Industrial Chemistry",
-        year: "2023–24",
-        desc: "Elected by 22 students. Bridged faculty-student communication and resolved ERP issues."
+        desc: "Project Lead for Internal Combustion RC Car. Battery Domain Head for Mars Rover Challenge (Goa)."
       }
     ],
 
-    // The Skills Matrix
     skills: {
-      technical: ["Python", "Pandas/NumPy", "Scikit-learn", "Docker", "React.js", "Node.js", "LangChain", "Streamlit", "SQLAlchemy"],
-      tools: ["Git/GitHub", "Blender (Geometry Nodes)", "Solid Edge", "AutoCAD", "MATLAB", "LaTeX", "Arduino"],
-      core: ["Machine Learning in Chem", "Electrochemistry", "Heterogeneous Catalysis"]
+      technical: ["Python", "C++", "JavaScript (React/Node)", "SQL", "MATLAB", "Docker", "Git/GitHub"],
+      ai_genai: ["Llama 3.2 (Local SLMs)", "RAG Pipelines", "LangChain", "MCP (Model Context Protocol)", "XGBoost", "SHAP", "Quantization (GGUF)"],
+      tools: ["Blender (Geometry Nodes)", "Solid Edge", "LaTeX", "Adobe Suite", "Linux/Bash"]
     },
 
     hackathons: [
-      "Mitsubishi 3D Tech Hackathon 2024: Cash Prize Winner for 3D Segmentation contribution.",
-      "Finshield Hackathon 2025: National Finalist - Built AI-driven credit risk analysis.",
-      "NPCI Hackathon 2024: Qualified for Round 2 (Conducted by E-Cell)."
+      "Finshield Hackathon 2025: National Finalist (Credit Risk AI).",
+      "Mitsubishi 3D Tech Hackathon 2024: Cash Prize Winner (3D Segmentation Pipeline).",
+      "NPCI Hackathon 2024: Qualified for Round 2."
     ],
 
     achievements: [
-      "Offered AI/ML Internship by Dr. Satish Kumar Regonda for excellent performance in coursework.",
+      "Secured All INDIA Rank 13665 in JEE Advanced.",
       "Secured All INDIA Rank 1140 in UCEED 2023.",
-      "NCC Cadet & Best Shooter (CATC - VII).",
-      "Karate Shodan (Black Belt)."
+      "Young Innovators Program Selection (CSIR-CCMB 2019).",
+      "Karate Shodan (Black Belt) & National Player."
     ]
   },
 
-  // 3. THE PROJECTS
+  // 3. THE PROJECTS (UPDATED WITH CORRECT GITHUB LINKS)
   projects: [
     {
-      id: "mitsubishi",
-      title: "3D Point Cloud Segmentation",
-      category: "Computer Vision",
-      stack: ["Python", "Blender API", "Docker", "LiDAR"],
-      bgTheme: "from-purple-900 via-indigo-950 to-black",
-      descriptions: {
-        recruiter: "Cash Prize Winner. Engineered an automated data pipeline using Python/Docker that reduced manual labeling time by 11x.",
-        professor: "Developed a novel procedural synthetic data generation engine in Blender to train Semantic Segmentation models.",
-        tech_head: "Built a Python-Blender bridge using Geometry Nodes. Containerized the entire ML pipeline in Docker for reproducible inference."
-      },
-      link: "https://github.com/rlv-iith/3d-point-cloud" 
-    },
-    {
-      id: "electrochem",
-      title: "ElectroChem Lab Automation",
-      category: "Robotics / R&D",
-      stack: ["Python", "G-Code", "AxiDraw", "Hardware"],
-      bgTheme: "from-emerald-900 via-teal-950 to-black",
-      descriptions: {
-        recruiter: "Built custom automation software for surface cutting. Collaborated with PhDs to increase lab testing throughput by 30%.",
-        professor: "Contributed to a publication (under review) by automating the AxiDraw machine for precise electrochemical deposition.",
-        tech_head: "Hacked an AxiDraw plotter using Python/CMD to accept custom G-Code. Integrated with Solid Edge designs."
-      },
-      link: "https://github.com/rlv-iith"
-    },
-    {
       id: "fintech-ai",
-      title: "Explainable AI Credit Risk",
-      category: "FinTech",
-      stack: ["XGBoost", "SHAP", "React", "Docker"],
+      title: "Credit Risk & Explainable AI",
+      category: "FinTech / ML",
+      stack: ["XGBoost", "SHAP", "Docker", "React"],
       bgTheme: "from-slate-800 via-yellow-950/30 to-black",
       descriptions: {
-        recruiter: "National Finalist Project. Built an end-to-end Platform for credit decisions. Delivers 'Glass-box' explainability for compliance.",
-        professor: "Implemented fairness-aware metrics handling career breaks. Utilized SHAP values to provide interpretability for XGBoost.",
-        tech_head: "Deployed a microservices architecture (FastAPI + React + Docker). Trained XGBoost on synthetic financial datasets."
+        recruiter: "National Finalist Project. Architected an end-to-end platform for credit decisions with 'Glass-box' explainability using SHAP. Containerized using Docker Compose.",
+        professor: "Engineered a fairness-aware feature pipeline handling career breaks. Optimized XGBoost metrics (AUC-ROC / F1-Score) on synthetic datasets.",
+        tech_head: "Deployed a microservices architecture (FastAPI backend + React frontend). Implemented custom income consistency scoring algorithms."
       },
-      link: "https://github.com/rlv-iith/credit-risk-ai"
+      link: "https://github.com/rlv-iith" // General link as repo is private
+    },
+    {
+      id: "mitsubishi",
+      title: "3D Synthetic Data Engine",
+      category: "Computer Vision",
+      stack: ["Blender API", "Python", "LiDAR", "Docker"],
+      bgTheme: "from-purple-900 via-indigo-950 to-black",
+      descriptions: {
+        recruiter: "Cash Prize Winner. Solved the data-scarcity problem by building a Synthetic Data Generation engine in Blender, reducing manual labeling time by 11x.",
+        professor: "Procedurally generated pre-labeled LiDAR point clouds using Geometry Nodes to train Semantic Segmentation models without human bias.",
+        tech_head: "Built a Python-Blender bridge for automated rendering. Containerized the entire pipeline for reproducible 3D inference."
+      },
+      link: "https://github.com/rlv-iith/3d-point-cloud" // CORRECTED
     },
     {
       id: "ibm-agent",
-      title: "AI Textbook Tutor",
-      category: "GenAI",
-      stack: ["LangChain", "OpenAI", "Streamlit", "RAG"],
+      title: "AI Textbook Tutor (RAG)",
+      category: "GenAI Agent",
+      stack: ["LangChain", "OpenAI", "Streamlit", "VectorDB"],
       bgTheme: "from-blue-900 via-cyan-950 to-black",
       descriptions: {
-        recruiter: "Developed an AI Tutor that eliminates hallucinations by referencing uploaded PDFs. Live deployed.",
-        professor: "Designed a RAG system ensuring answers are strictly derived from source textbooks, suitable for academic rigor.",
-        tech_head: "Engineered a RAG pipeline using LangChain. Vectorized PDFs and wrapped the agent in a Streamlit UI."
+        recruiter: "IBM Capstone Project. Built and deployed a hallucination-free AI Tutor that answers questions strictly from uploaded PDF textbooks.",
+        professor: "Implemented a Retrieval Augmented Generation (RAG) architecture to create a smart knowledge base for academic content.",
+        tech_head: "Engineered the backend using LangChain agents. Managed context windows and vector embeddings for precise query retrieval."
       },
-      link: "https://github.com/rlv-iith/ai-tutor"
+      link: "https://github.com/rlv-iith/ai-tutor" // CORRECTED
+    },
+    {
+      id: "electrochem",
+      title: "Lab Automation (AxiDraw)",
+      category: "Robotics / Hardware",
+      stack: ["Python", "G-Code", "Solid Edge", "Hardware"],
+      bgTheme: "from-emerald-900 via-teal-950 to-black",
+      descriptions: {
+        recruiter: "Bridged software and hardware. Hacked an AxiDraw machine to perform precise chemical deposition, increasing lab throughput by 30%.",
+        professor: "Designed prototype devices with ±0.005 inch precision. Work contributed to ongoing research in Micro-superconductors.",
+        tech_head: " wrote custom Python scripts to generate G-Code paths for non-standard hardware control. Integrated with CAD designs."
+      },
+      link: "https://github.com/rlv-iith" // General link as repo is private
     }
   ]
 };

@@ -17,29 +17,22 @@ const SectionTitle = ({ icon: Icon, title, color }) => (
     </div>
 );
 
-// NEW: Holographic Image Component (Passport Size: 2x2 inches = ~192px)
 const TechProfileImage = ({ src }) => (
     <div className="relative w-44 h-44 md:w-48 md:h-56 shrink-0 group">
-        {/* Glowing Border Container */}
         <div className="absolute inset-0 border-2 border-blue-500/30 rounded-xl rotate-3 group-hover:rotate-0 transition-transform duration-500" />
         <div className="absolute inset-0 border-2 border-white/10 rounded-xl -rotate-3 group-hover:rotate-0 transition-transform duration-500 bg-black" />
         
-        {/* The Image Wrapper */}
         <div className="absolute inset-2 rounded-lg overflow-hidden border border-white/20">
-            {/* The Image (Grayscale -> Color on Hover) */}
             <img 
                 src={src} 
                 alt="Profile" 
                 className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-500" 
             />
-            
-            {/* Scanner Line Animation */}
             <motion.div 
                 animate={{ top: ['0%', '100%', '0%'] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                 className="absolute left-0 w-full h-[2px] bg-blue-400 shadow-[0_0_10px_#3b82f6] opacity-50"
             />
-            {/* Tech Overlay (Grid) */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none" />
         </div>
     </div>
@@ -50,6 +43,11 @@ export default function Recruiter() {
   const color = "blue"; 
   const resume = content.resume; 
   const projects = content.projects;
+
+  // These are now safe and will not crash
+  const technicalSkills = resume.skills.technical || [];
+  const secondarySkills = [...(resume.skills.ai_genai || []), ...(resume.skills.tools || [])];
+
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500/30">
@@ -90,13 +88,11 @@ export default function Recruiter() {
                 </div>
                 
                 <h1 className="text-5xl md:text-6xl font-black uppercase mb-4 brand-font text-white">
-                    Lalith <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Vishnu</span>
+                    {content.personal.name.split(" ")[0]} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">{content.personal.name.split(" ").slice(1).join(" ")}</span>
                 </h1>
                 
                 <p className="text-xl text-gray-300 font-light mb-6 max-w-xl mx-auto md:mx-0">
-                    Industrial Chemist & Full-Stack AI Engineer. Bridging the gap between 
-                    <span className="text-white font-medium"> Molecule</span> and 
-                    <span className="text-white font-medium"> Machine</span>.
+                    {content.headers.recruiter.tagline}
                 </p>
 
                 <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm font-mono text-gray-500">
@@ -109,7 +105,6 @@ export default function Recruiter() {
                 </div>
             </div>
 
-            {/* THE NEW IMAGE COMPONENT */}
             <TechProfileImage src={content.personal.photo} />
 
         </motion.header>
@@ -123,7 +118,7 @@ export default function Recruiter() {
                          Technical Arsenal
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                        {resume.skills.technical.map(s => (
+                        {technicalSkills.map(s => (
                             <span key={s} className="px-2 py-1 text-xs font-mono bg-blue-500/10 text-blue-200 rounded border border-blue-500/20">{s}</span>
                         ))}
                     </div>
@@ -131,10 +126,10 @@ export default function Recruiter() {
                 <div className="p-6 bg-white/5 border border-white/10 rounded-xl relative overflow-hidden group">
                      <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-50 transition-opacity"><Cpu /></div>
                     <h3 className="text-emerald-400 font-bold mb-4 uppercase text-xs tracking-widest">
-                         Tools & Core
+                         AI & GenAI Core
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                        {[...resume.skills.tools, ...resume.skills.core].slice(0, 10).map(s => (
+                        {secondarySkills.map(s => (
                             <span key={s} className="px-2 py-1 text-xs font-mono bg-emerald-500/10 text-emerald-200 rounded border border-emerald-500/20">{s}</span>
                         ))}
                     </div>
@@ -142,7 +137,7 @@ export default function Recruiter() {
              </div>
         </motion.section>
 
-        {/* 3. PROFESSIONAL EXPERIENCE (The "Meat") */}
+        {/* 3. PROFESSIONAL EXPERIENCE */}
         <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             <SectionTitle icon={Briefcase} title="Experience" color={color} />
             <div className="space-y-6 pl-4 border-l border-white/10 ml-3">
@@ -208,7 +203,7 @@ export default function Recruiter() {
                      <div key={i} className="p-6 border border-dashed border-white/10 rounded-xl hover:bg-white/5 transition-colors">
                         <div className="flex justify-between items-start mb-2">
                             <h3 className="font-bold text-white text-sm">{cert.title}</h3>
-                            <span className="text-[10px] uppercase font-bold text-gray-500 border border-white/10 px-2 py-1 rounded">Workshop</span>
+                            <span className="text-[10px] uppercase font-bold text-gray-500 border border-white/10 px-2 py-1 rounded">{cert.type}</span>
                         </div>
                         <p className="text-blue-400 text-xs font-mono mb-2">{cert.issuer}</p>
                         <p className="text-gray-400 text-xs leading-relaxed line-clamp-2">{cert.desc}</p>
