@@ -125,8 +125,8 @@ export default function Landing() {
                 <div className="h-[1px] bg-white/10" />
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Currently</p>
-                  <p className="text-sm text-white font-mono">Research Intern · IISc Bangalore</p>
-                  <p className="text-sm text-gray-500 font-mono">Molecular Electronics</p>
+                  <p className="text-sm text-white font-mono">AI Systems Intern · Stremly</p>
+                  <p className="text-sm text-gray-500 font-mono">Dublin, Ireland · AI Startup</p>
                 </div>
                 <div className="h-[1px] bg-white/10" />
                 <div>
