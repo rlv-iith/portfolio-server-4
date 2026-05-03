@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from 'react';
 const RoleContext = createContext();
 
 export const RoleProvider = ({ children }) => {
-  // state can be: null (landing page), 'recruiter', 'professor', 'tech_head'
+  // state can be: null (landing page) | 'recruiter'
   const [role, setRole] = useState(null);
 
   return (
