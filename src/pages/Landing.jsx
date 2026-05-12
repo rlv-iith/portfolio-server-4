@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useRole } from '../context/RoleContext';
 import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail } from 'lucide-react';
 import Hero3D from '../components/Hero3D';
+import { trackEvent } from '../analytics';
 
 const cards = [
   { id: 'recruiter', title: "RECRUITER", subtitle: "CORPORATE", icon: <Briefcase size={32} />, desc: "Resume, Impact Metrics & Professional Summary.", border: "border-blue-500/50", glow: "group-hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]", position: "right" },
@@ -78,7 +79,7 @@ export default function Landing() {
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_10%,black_100%)] z-0 pointer-events-none opacity-40" />
 
       {/* --- SECTION 1: HERO & PERSONAS --- */}
-      <div className="z-10 w-full flex flex-col items-center min-h-screen pt-8 pb-12 px-4 md:px-12 relative">
+      <div data-section="hero" className="z-10 w-full flex flex-col items-center min-h-screen pt-8 pb-12 px-4 md:px-12 relative">
         
         {/* HEADER */}
         <motion.div 
@@ -179,16 +180,19 @@ export default function Landing() {
           className="absolute bottom-8 flex items-center gap-6 opacity-60 hover:opacity-100 transition-opacity"
         >
           <a href="https://github.com/rlv-iith" target="_blank" rel="noreferrer"
+            onClick={() => trackEvent('link_click', { label: 'GitHub' })}
             className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors">
             <Github size={14} /> GitHub
           </a>
           <span className="text-white/20">|</span>
           <a href="https://www.linkedin.com/in/ramuni-lalith-vishnu-4143ab299/" target="_blank" rel="noreferrer"
+            onClick={() => trackEvent('link_click', { label: 'LinkedIn' })}
             className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-blue-400 transition-colors">
             <Linkedin size={14} /> LinkedIn
           </a>
           <span className="text-white/20">|</span>
           <a href="mailto:ic23btech11016@iith.ac.in"
+            onClick={() => trackEvent('link_click', { label: 'Email' })}
             className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors">
             <Mail size={14} /> ic23btech11016@iith.ac.in
           </a>
@@ -196,7 +200,7 @@ export default function Landing() {
       </div>
 
       {/* --- SECTION 2: SOCIAL & HOBBIES (Below the fold) --- */}
-      <div className="z-10 w-full max-w-7xl px-6 py-20 border-t border-white/10 bg-black/80 backdrop-blur-xl">
+      <div data-section="extras" className="z-10 w-full max-w-7xl px-6 py-20 border-t border-white/10 bg-black/80 backdrop-blur-xl">
         <div className="flex items-center gap-4 mb-12">
             <div className="h-[1px] bg-white/20 flex-grow" />
             <h3 className="text-xl font-bold tracking-[0.3em] brand-font text-gray-400">

@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
 import { useRole } from '../context/RoleContext';
 import { content } from '../data/projectData';
-import { 
-    ArrowLeft, Github, FileText, GraduationCap, Briefcase, 
-    Trophy, Code, Users, Cpu, Medal, MapPin 
+import {
+    ArrowLeft, Github, FileText, GraduationCap, Briefcase,
+    Trophy, Code, Users, Cpu, Medal, MapPin
 } from 'lucide-react';
+import { trackEvent } from '../analytics';
 
 const SectionTitle = ({ icon: Icon, title, color }) => (
     <div className="flex items-center gap-4 mb-6 border-b border-white/10 pb-4 mt-12">
@@ -63,7 +64,9 @@ export default function Recruiter() {
             </div>
         </div>
         <div className="hidden md:flex items-center gap-4">
-            <a href="/Lalith_Vishnu_Resume.pdf" download className="flex items-center gap-2 px-4 py-1.5 text-xs font-bold text-blue-400 border border-blue-500/30 rounded bg-blue-500/10 hover:bg-blue-500/20 transition-all">
+            <a href="/Lalith_Vishnu_Resume.pdf" download
+                onClick={() => trackEvent('resume_download')}
+                className="flex items-center gap-2 px-4 py-1.5 text-xs font-bold text-blue-400 border border-blue-500/30 rounded bg-blue-500/10 hover:bg-blue-500/20 transition-all">
                 <FileText size={14} /> DOWNLOAD CV
             </a>
         </div>
@@ -110,7 +113,7 @@ export default function Recruiter() {
         </motion.header>
 
         {/* 2. SKILLS (Top Priority for Recruiters) */}
-        <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
+        <motion.section data-section="skills" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-6 bg-blue-900/5 border border-blue-500/20 rounded-xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-50 transition-opacity"><Code /></div>
@@ -138,7 +141,7 @@ export default function Recruiter() {
         </motion.section>
 
         {/* 3. PROFESSIONAL EXPERIENCE */}
-        <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+        <motion.section data-section="experience" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             <SectionTitle icon={Briefcase} title="Experience" color={color} />
             <div className="space-y-6 pl-4 border-l border-white/10 ml-3">
                 {resume.experience.map((exp, i) => (
@@ -164,14 +167,16 @@ export default function Recruiter() {
         </motion.section>
 
         {/* 4. TECHNICAL DELIVERABLES (Projects) */}
-        <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+        <motion.section data-section="projects" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
             <SectionTitle icon={Code} title="Deliverables" color={color} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {projects.map((proj) => (
                     <div key={proj.id} className="group border border-white/10 bg-white/5 rounded-xl p-6 hover:bg-white/10 transition-all hover:-translate-y-1 relative">
                         <div className="flex justify-between items-start mb-4">
                             <span className="text-[10px] font-mono text-blue-400 border border-blue-500/20 px-2 py-1 rounded bg-blue-500/5">{proj.category}</span>
-                            <a href={proj.link} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-white transition-colors">
+                            <a href={proj.link} target="_blank" rel="noreferrer"
+                                onClick={() => trackEvent('project_click', { id: proj.id, title: proj.title })}
+                                className="flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-white transition-colors">
                                 <Github size={14} />
                             </a>
                         </div>
@@ -186,7 +191,7 @@ export default function Recruiter() {
         </motion.section>
 
         {/* 5. EDUCATION & CERTIFICATIONS (Reordered lower) */}
-        <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+        <motion.section data-section="education" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
             <SectionTitle icon={GraduationCap} title="Education & Certs" color={color} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {resume.education.map((edu) => (
@@ -213,7 +218,7 @@ export default function Recruiter() {
         </motion.section>
 
         {/* 6. LEADERSHIP (PoR) */}
-        <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+        <motion.section data-section="leadership" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
             <SectionTitle icon={Users} title="Leadership" color={color} />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {resume.responsibilities.map((pos, i) => (
@@ -227,7 +232,7 @@ export default function Recruiter() {
         </motion.section>
 
         {/* 7. COMPETITIVE EVENTS */}
-        <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+        <motion.section data-section="awards" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
             <SectionTitle icon={Trophy} title="Awards & Events" color={color} />
             <div className="bg-black/30 border border-white/10 rounded-xl overflow-hidden mb-6">
                 {[...resume.hackathons, ...resume.achievements].map((item, i) => (
