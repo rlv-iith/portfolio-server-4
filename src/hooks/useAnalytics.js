@@ -141,12 +141,19 @@ export function useAnalytics() {
 
       const url = `${import.meta.env.VITE_BACKEND_URL || ''}/track`;
       const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-      navigator.sendBeacon(url, blob);
+
+      // sendBeacon is unreliable on iOS Safari — fall back to fetch with keepalive
+      const sent = navigator.sendBeacon(url, blob);
+      if (!sent) {
+        fetch(url, { method: 'POST', body: blob, keepalive: true }).catch(() => {});
+      }
     }
 
     const onHide = () => { if (document.visibilityState === 'hidden') flush(); };
     document.addEventListener('visibilitychange', onHide);
     window.addEventListener('pagehide', flush);
+    // iOS fires freeze when the page is put in back/forward cache
+    window.addEventListener('freeze', flush);
 
     resetIdle();
 
@@ -158,6 +165,7 @@ export function useAnalytics() {
       window.removeEventListener('touchstart', resetIdle);
       document.removeEventListener('visibilitychange', onHide);
       window.removeEventListener('pagehide', flush);
+      window.removeEventListener('freeze', flush);
       io.disconnect();
       mo.disconnect();
       clearTimeout(idleTimer.current);
