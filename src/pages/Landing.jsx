@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRole } from '../context/RoleContext';
 import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail, Send } from 'lucide-react';
 import Hero3D from '../components/Hero3D';
+import Footer from '../components/Footer';
 import { trackEvent, SESSION_TOKEN } from '../analytics';
 
 const cards = [
@@ -464,6 +465,7 @@ export default function Landing() {
         </div>
       </div>
 
+      <Footer />
     </div>
   );
 }

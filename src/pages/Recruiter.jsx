@@ -6,6 +6,7 @@ import {
     Trophy, Code, Users, Cpu, Medal, MapPin
 } from 'lucide-react';
 import { trackEvent } from '../analytics';
+import Footer from '../components/Footer';
 
 const SectionTitle = ({ icon: Icon, title, color }) => (
     <div className="flex items-center gap-4 mb-6 border-b border-white/10 pb-4 mt-12">
@@ -245,6 +246,7 @@ export default function Recruiter() {
         </motion.section>
 
       </main>
+      <Footer />
     </div>
   );
 }
