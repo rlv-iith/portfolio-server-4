@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { getEvents } from '../analytics';
+import { getEvents, SESSION_TOKEN } from '../analytics';
 
 function getSessionId() {
   let id = sessionStorage.getItem('_sid');
@@ -126,6 +126,7 @@ export function useAnalytics() {
 
       const payload = {
         session_id: SESSION_ID,
+        token: SESSION_TOKEN,
         screen: `${window.screen.width}x${window.screen.height}`,
         colorScheme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
         localHour: new Date().getHours(),

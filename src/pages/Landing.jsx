@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useRole } from '../context/RoleContext';
 import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail } from 'lucide-react';
 import Hero3D from '../components/Hero3D';
-import { trackEvent } from '../analytics';
+import { trackEvent, SESSION_TOKEN } from '../analytics';
 
 const cards = [
   { id: 'recruiter', title: "RECRUITER", subtitle: "CORPORATE", icon: <Briefcase size={32} />, desc: "Resume, Impact Metrics & Professional Summary.", border: "border-blue-500/50", glow: "group-hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]", position: "right" },
@@ -68,7 +68,7 @@ export default function Landing() {
     fetch(`${import.meta.env.VITE_BACKEND_URL || ''}/log`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role: roleId }),
+      body: JSON.stringify({ role: roleId, token: SESSION_TOKEN }),
     }).catch(() => {});
   };
 
