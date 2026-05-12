@@ -1,7 +1,8 @@
 // src/pages/Landing.jsx
 import { motion } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
 import { useRole } from '../context/RoleContext';
-import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail } from 'lucide-react';
+import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail, Send } from 'lucide-react';
 import Hero3D from '../components/Hero3D';
 import { trackEvent, SESSION_TOKEN } from '../analytics';
 
@@ -58,10 +59,208 @@ const PersonaCard = ({ card, index, onSelect }) => (
   </motion.button>
 );
 
+const FIELD_CLASS = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition-colors";
+
+function VisitorForm({ onSubmit }) {
+  const [form, setForm] = useState({ name: '', role: '', company: '', purpose: '', feedback: '' });
+  const [submitted, setSubmitted] = useState(false);
+
+  const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    onSubmit(form);
+    setSubmitted(true);
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -40 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5 }}
+      className="glass-panel p-6 rounded-3xl border border-white/10 flex flex-col gap-6"
+    >
+      <div>
+        <span className="text-xs tracking-[0.3em] text-gray-500 uppercase font-mono">Who are you?</span>
+        <p className="text-sm text-gray-400 font-mono mt-1">Tell me a bit about yourself.</p>
+      </div>
+
+      {submitted ? (
+        <div className="flex-grow flex flex-col items-center justify-center gap-3 py-8 text-center">
+          <div className="text-3xl">✓</div>
+          <p className="text-white font-bold brand-font">Thanks, {form.name || 'visitor'}!</p>
+          <p className="text-xs text-gray-500 font-mono">Your details have been logged. Feel free to explore.</p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <input
+            type="text" placeholder="Name" required
+            value={form.name} onChange={set('name')}
+            className={FIELD_CLASS}
+          />
+          <input
+            type="text" placeholder="Role  (e.g. Recruiter, Professor, Student)"
+            value={form.role} onChange={set('role')}
+            className={FIELD_CLASS}
+          />
+          <input
+            type="text" placeholder="Company / Institute"
+            value={form.company} onChange={set('company')}
+            className={FIELD_CLASS}
+          />
+          <input
+            type="text" placeholder="Purpose  (e.g. Hiring, Collaboration, Research)"
+            value={form.purpose} onChange={set('purpose')}
+            className={FIELD_CLASS}
+          />
+          <textarea
+            placeholder="Suggestions or feedback  (optional)"
+            rows={3}
+            value={form.feedback} onChange={set('feedback')}
+            className={`${FIELD_CLASS} resize-none`}
+          />
+          <button
+            type="submit"
+            className="mt-1 w-full py-2.5 rounded-xl bg-blue-600/30 border border-blue-500/30 text-blue-400 hover:bg-blue-600/50 hover:text-white font-mono text-sm font-bold tracking-widest transition-all"
+          >
+            SUBMIT_
+          </button>
+        </form>
+      )}
+    </motion.div>
+  );
+}
+
+const SUGGESTED = [
+  "What has he built?",
+  "Tell me about the MCP work at Stremly",
+  "What's his tech stack?",
+];
+
+function ChatPanel() {
+  const [messages, setMessages] = useState([
+    { role: 'assistant', content: "Hi! Ask me anything about Lalith — his projects, experience, or tech stack." }
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, loading]);
+
+  async function send(text) {
+    const msg = text.trim();
+    if (!msg || loading) return;
+    setInput('');
+    const next = [...messages, { role: 'user', content: msg }];
+    setMessages(next);
+    setLoading(true);
+    trackEvent('chat_message', { preview: msg.slice(0, 60) });
+
+    const aiUrl = import.meta.env.VITE_AI_BRAIN_URL;
+    if (!aiUrl) {
+      setMessages([...next, { role: 'assistant', content: "AI Brain not connected yet — coming soon!" }]);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${aiUrl}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, history: messages, persona: 'recruiter' }),
+      });
+      if (!res.ok) throw new Error('non-ok');
+      const { reply } = await res.json();
+      setMessages([...next, { role: 'assistant', content: reply }]);
+    } catch {
+      setMessages([...next, { role: 'assistant', content: "AI Brain is offline right now. Check back soon!" }]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 40 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5 }}
+      className="glass-panel p-6 rounded-3xl border border-white/10 flex flex-col gap-4"
+    >
+      <div>
+        <span className="text-xs tracking-[0.3em] text-gray-500 uppercase font-mono">Ask about me</span>
+        <p className="text-sm text-gray-400 font-mono mt-1">Powered by MCP + LLM — ask anything.</p>
+      </div>
+
+      {/* Message thread */}
+      <div className="flex-grow overflow-y-auto max-h-[320px] flex flex-col gap-3 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/10">
+        {messages.map((m, i) => (
+          <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm font-mono leading-relaxed ${
+              m.role === 'user'
+                ? 'bg-blue-600/30 border border-blue-500/30 text-white'
+                : 'bg-white/5 border border-white/10 text-gray-300'
+            }`}>
+              {m.content}
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5">
+              <span className="flex gap-1 items-center">
+                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              </span>
+            </div>
+          </div>
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Suggested prompts */}
+      {messages.length === 1 && (
+        <div className="flex flex-wrap gap-2">
+          {SUGGESTED.map((s) => (
+            <button
+              key={s}
+              onClick={() => send(s)}
+              className="text-xs font-mono text-gray-400 border border-white/10 rounded-full px-3 py-1 hover:bg-white/10 hover:text-white transition-colors"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Input */}
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && send(input)}
+          placeholder="Ask anything..."
+          className="flex-grow bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition-colors"
+        />
+        <button
+          onClick={() => send(input)}
+          disabled={!input.trim() || loading}
+          className="p-2.5 bg-blue-600/30 border border-blue-500/30 rounded-xl text-blue-400 hover:bg-blue-600/50 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+        >
+          <Send size={16} />
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Landing() {
   const { setRole } = useRole();
-  const leftCards = cards.filter(card => card.position === 'left');
-  const rightCards = cards.filter(card => card.position === 'right');
 
   const handleSelect = (roleId) => {
     setRole(roleId);
@@ -69,6 +268,15 @@ export default function Landing() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ role: roleId, token: SESSION_TOKEN }),
+    }).catch(() => {});
+  };
+
+  const handleVisitorSubmit = (fields) => {
+    trackEvent('visitor_form', { role: fields.role });
+    fetch(`${import.meta.env.VITE_BACKEND_URL || ''}/log`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...fields, token: SESSION_TOKEN }),
     }).catch(() => {});
   };
 
@@ -199,7 +407,26 @@ export default function Landing() {
         </motion.div>
       </div>
 
-      {/* --- SECTION 2: SOCIAL & HOBBIES (Below the fold) --- */}
+      {/* --- SECTION 2: WHO ARE YOU + ASK ABOUT ME --- */}
+      <div data-section="interact" className="z-10 w-full max-w-7xl px-6 py-20 border-t border-white/10 bg-black/80 backdrop-blur-xl">
+        <div className="flex items-center gap-4 mb-12">
+          <div className="h-[1px] bg-white/20 flex-grow" />
+          <h3 className="text-xl font-bold tracking-[0.3em] brand-font text-gray-400">INTERACT</h3>
+          <div className="h-[1px] bg-white/20 flex-grow" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          {/* LEFT — Who are you? */}
+          <VisitorForm onSubmit={handleVisitorSubmit} />
+
+          {/* RIGHT — Ask about me */}
+          <ChatPanel />
+
+        </div>
+      </div>
+
+      {/* --- SECTION 3: SOCIAL & HOBBIES (Below the fold) --- */}
       <div data-section="extras" className="z-10 w-full max-w-7xl px-6 py-20 border-t border-white/10 bg-black/80 backdrop-blur-xl">
         <div className="flex items-center gap-4 mb-12">
             <div className="h-[1px] bg-white/20 flex-grow" />
