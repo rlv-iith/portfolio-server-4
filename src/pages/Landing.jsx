@@ -327,7 +327,7 @@ function ChatPanel() {
           type="text"
           value={input}
           onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && send(input)}
+          onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); send(input); } }}
           placeholder="Ask anything..."
           className="flex-grow bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition-colors"
         />
