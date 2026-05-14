@@ -50,17 +50,17 @@ export const content = {
   resume: {
     education: [
       {
-        degree: "B.Tech Industrial Chemistry (Minor in Civil Eng)",
+        degree: "B.Tech Industrial Chemistry",
         school: "IIT Hyderabad",
         year: "2023 - 2027",
-        score: "CGPA: 7.99",
+        
         id: "iith"
       },
       {
         degree: "Class XII",
         school: "Narayana Junior College",
         year: "2021 - 2023",
-        score: "93.80%",
+        
         id: "12th"
       }
     ],
@@ -184,7 +184,7 @@ export const content = {
       id: "mitsubishi",
       title: "3D Synthetic Data Engine",
       category: "Computer Vision",
-      stack: ["Blender API", "Python", "LiDAR", "Docker"],
+      stack: ["Blender", "Python", "LiDAR", "Docker"],
       bgTheme: "from-purple-900 via-indigo-950 to-black",
       descriptions: {
         recruiter: "Cash Prize Winner. Solved the data-scarcity problem by building a Synthetic Data Generation engine in Blender, reducing manual labeling time by 11x.",

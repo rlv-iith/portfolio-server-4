@@ -92,7 +92,7 @@ export default function Recruiter() {
                 </div>
                 
                 <h1 className="text-5xl md:text-6xl font-black uppercase mb-4 brand-font text-white">
-                    {content.personal.name.split(" ")[0]} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">{content.personal.name.split(" ").slice(1).join(" ")}</span>
+                    {content.personal.name.split(" ")[6]} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">{content.personal.name.split(" ").slice(1).join(" ")}</span>
                 </h1>
                 
                 <p className="text-xl text-gray-300 font-light mb-6 max-w-xl mx-auto md:mx-0">
@@ -101,7 +101,7 @@ export default function Recruiter() {
 
                 <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm font-mono text-gray-500">
                     <div className="flex items-center gap-2">
-                         <Briefcase size={14} /> Available for Internships
+                         <Briefcase size={14} /> B.Tech, IIT Hyderabad
                     </div>
                     <div className="flex items-center gap-2">
                          <MapPin size={14} /> Hyderabad, India
