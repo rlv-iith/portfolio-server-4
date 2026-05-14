@@ -6,6 +6,19 @@ import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, 
 import Hero3D from '../components/Hero3D';
 import Footer from '../components/Footer';
 import { trackEvent, SESSION_TOKEN } from '../analytics';
+import { LINKS } from '../data/links.config';
+import { GALLERY_META, GALLERY_FALLBACK } from '../data/gallery.config';
+
+// Auto-import every image dropped into src/assets/gallery/ ─────────────────
+// To add a photo: drop it in that folder, then add metadata in gallery.config.js
+const _rawGallery = import.meta.glob(
+  '../assets/gallery/*.{jpg,jpeg,png,webp,gif,JPG,JPEG,PNG,WEBP,GIF}',
+  { eager: true, query: '?url', import: 'default' }
+);
+const GALLERY_IMAGES = Object.entries(_rawGallery).map(([path, url]) => ({
+  filename: path.split('/').pop(),
+  url,
+}));
 
 const cards = [
   { id: 'recruiter', title: "RECRUITER", subtitle: "CORPORATE", icon: <Briefcase size={32} />, desc: "Resume, Impact Metrics & Professional Summary.", border: "border-blue-500/50", glow: "group-hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]", position: "right" },
@@ -59,6 +72,74 @@ const PersonaCard = ({ card, index, onSelect }) => (
     </div>
   </motion.button>
 );
+
+// ─── MULTIMEDIA PHOTO COLLAGE ────────────────────────────────────────────────
+// Diamond layout: rows of [1, 3, 5, 5, 3, 1] images = 18 max
+const DIAMOND_ROWS = [1, 3, 5, 5, 3, 1];
+
+const GalleryItem = ({ img }) => {
+  const meta = GALLERY_META[img.filename] || GALLERY_FALLBACK;
+  return (
+    <motion.div
+      whileHover={{ scale: 1.06, zIndex: 20 }}
+      transition={{ duration: 0.18 }}
+      className="relative group overflow-hidden rounded-xl flex-shrink-0 cursor-pointer"
+      style={{ width: 220, height: 147 }}
+    >
+      <img
+        src={img.url}
+        alt={meta.event}
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        loading="lazy"
+        draggable={false}
+      />
+      {/* hover overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-250 flex flex-col justify-end p-2.5 pointer-events-none">
+        <p className={`text-[10px] font-bold leading-tight truncate ${meta.category}`}>
+          {meta.project}
+        </p>
+        <p className="text-[9px] text-gray-300 font-mono leading-tight mt-0.5 truncate opacity-90">
+          {meta.event}
+        </p>
+      </div>
+    </motion.div>
+  );
+};
+
+const GalleryCollage = () => {
+  if (GALLERY_IMAGES.length === 0) {
+    return (
+      <div className="text-center py-16 border border-dashed border-white/10 rounded-3xl">
+        <p className="text-gray-600 font-mono text-sm">Drop photos into</p>
+        <code className="text-gray-500 font-mono text-xs mt-1 block">src/assets/gallery/</code>
+        <p className="text-gray-700 font-mono text-[10px] mt-2">
+          then add event metadata in gallery.config.js
+        </p>
+      </div>
+    );
+  }
+
+  // Slice images into diamond rows, skip empty tail rows
+  let idx = 0;
+  const rows = DIAMOND_ROWS.map(count => {
+    const slice = GALLERY_IMAGES.slice(idx, idx + count);
+    idx += count;
+    return slice;
+  }).filter(r => r.length > 0);
+
+  return (
+    <div className="overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/10 pb-2">
+      <div className="flex flex-col items-center gap-1.5 mx-auto" style={{ width: 'fit-content', minWidth: 'min(100%, 870px)' }}>
+        {rows.map((row, ri) => (
+          <div key={ri} className="flex gap-1.5 justify-center">
+            {row.map(img => <GalleryItem key={img.filename} img={img} />)}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 
 const FIELD_CLASS = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition-colors";
 
@@ -390,22 +471,22 @@ export default function Landing() {
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 1 }}
           className="absolute bottom-8 flex items-center gap-6 opacity-60 hover:opacity-100 transition-opacity"
         >
-          <a href="https://github.com/rlv-iith" target="_blank" rel="noreferrer"
+          <a href={LINKS.social.github} target="_blank" rel="noreferrer"
             onClick={() => trackEvent('link_click', { label: 'GitHub' })}
             className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors">
             <Github size={14} /> GitHub
           </a>
           <span className="text-white/20">|</span>
-          <a href="https://www.linkedin.com/in/ramuni-lalith-vishnu-4143ab299/" target="_blank" rel="noreferrer"
+          <a href={LINKS.social.linkedin} target="_blank" rel="noreferrer"
             onClick={() => trackEvent('link_click', { label: 'LinkedIn' })}
             className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-blue-400 transition-colors">
             <Linkedin size={14} /> LinkedIn
           </a>
           <span className="text-white/20">|</span>
-          <a href="mailto:ic23btech11016@iith.ac.in"
+          <a href={`mailto:${LINKS.social.email}`}
             onClick={() => trackEvent('link_click', { label: 'Email' })}
             className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors">
-            <Mail size={14} /> ic23btech11016@iith.ac.in
+            <Mail size={14} /> {LINKS.social.email}
           </a>
         </motion.div>
       </div>
@@ -429,7 +510,27 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* --- SECTION 3: SOCIAL & HOBBIES (Below the fold) --- */}
+      {/* --- SECTION 3: MULTIMEDIA GALLERY --- */}
+      <div data-section="gallery-media" className="z-10 w-full max-w-7xl px-6 py-20 border-t border-white/10 bg-black/80 backdrop-blur-xl">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="h-[1px] bg-white/20 flex-grow" />
+          <h3 className="text-xl font-bold tracking-[0.3em] brand-font text-gray-400">GALLERY</h3>
+          <div className="h-[1px] bg-white/20 flex-grow" />
+        </div>
+        <p className="text-center text-xs text-gray-600 font-mono mb-10">
+          Hover any photo to see the event and project
+        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.6 }}
+        >
+          <GalleryCollage />
+        </motion.div>
+      </div>
+
+      {/* --- SECTION 5: SOCIAL & HOBBIES (Below the fold) --- */}
       <div data-section="extras" className="z-10 w-full max-w-7xl px-6 py-20 border-t border-white/10 bg-black/80 backdrop-blur-xl">
         <div className="flex items-center gap-4 mb-12">
             <div className="h-[1px] bg-white/20 flex-grow" />
