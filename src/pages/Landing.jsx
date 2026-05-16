@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { useRole } from '../context/RoleContext';
-import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail, Send } from 'lucide-react';
+import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail, Send, SlidersHorizontal } from 'lucide-react';
 import Hero3D from '../components/Hero3D';
 import Footer from '../components/Footer';
 import { trackEvent, SESSION_TOKEN } from '../analytics';
@@ -220,12 +220,21 @@ const SUGGESTED = [
   "What's his tech stack?",
 ];
 
+const MODES = [
+  { id: 'RACE',    label: 'RACE',      desc: 'cloud · first wins' },
+  { id: 'SINGLE',  label: 'SINGLE',    desc: 'cloud · one model' },
+  { id: 'COMPETE', label: 'COMPETE',   desc: 'cloud · best reply' },
+  { id: 'LOCAL',   label: 'LOCAL SLM', desc: 'laptop · semantic RAG' },
+];
+
 function ChatPanel() {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: "Hi! Ask me anything about Lalith — his projects, experience, or tech stack." }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState('RACE');
+  const [showModes, setShowModes] = useState(false);
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -254,7 +263,7 @@ function ChatPanel() {
       const res = await fetch(`${aiUrl}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: msg, history: messages, persona: 'recruiter' }),
+        body: JSON.stringify({ message: msg, history: messages, persona: 'recruiter', mode }),
       });
       if (!res.ok) throw new Error('non-ok');
       const { reply } = await res.json();
@@ -274,10 +283,45 @@ function ChatPanel() {
       transition={{ duration: 0.5 }}
       className="glass-panel p-6 rounded-3xl border border-white/10 flex flex-col gap-4"
     >
-      <div>
-        <span className="text-xs tracking-[0.3em] text-gray-500 uppercase font-mono">Ask about me</span>
-        <p className="text-sm text-gray-400 font-mono mt-1">Powered by MCP + LLM — ask anything.</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <span className="text-xs tracking-[0.3em] text-gray-500 uppercase font-mono">Ask about me</span>
+          <p className="text-sm text-gray-400 font-mono mt-1">
+            Powered by LLM ·{' '}
+            <span className="text-blue-400 text-xs">{mode}</span>
+          </p>
+        </div>
+        <button
+          onClick={() => setShowModes(v => !v)}
+          title="Router mode"
+          className={`p-1.5 rounded-lg border transition-colors ${showModes ? 'border-blue-500/50 text-blue-400' : 'border-white/10 text-gray-600 hover:text-gray-400'}`}
+        >
+          <SlidersHorizontal size={13} />
+        </button>
       </div>
+
+      {/* Mode selector — hidden until ⚙ is clicked */}
+      {showModes && (
+        <div className="flex flex-col gap-2 p-3 bg-white/3 border border-white/8 rounded-xl">
+          <span className="text-[9px] tracking-[0.25em] text-gray-600 uppercase font-mono">Router Mode</span>
+          <div className="flex gap-2">
+            {MODES.map(m => (
+              <button
+                key={m.id}
+                onClick={() => { setMode(m.id); setShowModes(false); }}
+                className={`flex-1 py-1.5 px-2 rounded-lg border text-[10px] font-mono font-bold tracking-wider transition-all ${
+                  mode === m.id
+                    ? 'border-blue-500/60 bg-blue-600/20 text-blue-300'
+                    : 'border-white/10 text-gray-500 hover:border-white/20 hover:text-gray-300'
+                }`}
+              >
+                <div>{m.label}</div>
+                <div className="text-[8px] font-normal opacity-60 mt-0.5">{m.desc}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Message thread */}
       <div className="flex-grow overflow-y-auto max-h-[320px] flex flex-col gap-3 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/10">
