@@ -87,7 +87,7 @@ function Nucleus() {
              {/* Inner Solid Core (faint) */}
              <mesh>
                 <icosahedronGeometry args={[0.1, 0]} />
-                <meshBasicMaterial color="#fbff00ff" transparent opacity={1} />
+                <meshBasicMaterial color="#fbff00" transparent opacity={1} />
              </mesh>
         </group>
     )
