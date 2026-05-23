@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { useRole } from '../context/RoleContext';
-import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail, Send, SlidersHorizontal } from 'lucide-react';
+import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail, Send, SlidersHorizontal, ChevronDown } from 'lucide-react';
 import Hero3D from '../components/Hero3D';
 import Footer from '../components/Footer';
 import { trackEvent, SESSION_TOKEN, SESSION_ID } from '../analytics';
@@ -236,10 +236,11 @@ function ChatPanel() {
   const [mode, setMode] = useState('RACE');
   const [showModes, setShowModes] = useState(false);
   const bottomRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (messages.length > 1) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [messages, loading]);
 
@@ -247,6 +248,7 @@ function ChatPanel() {
     const msg = text.trim();
     if (!msg || loading) return;
     setInput('');
+    inputRef.current?.focus();
     const next = [...messages, { role: 'user', content: msg }];
     setMessages(next);
     setLoading(true);
@@ -369,6 +371,7 @@ function ChatPanel() {
       <div className="flex gap-2">
         <input
           type="text"
+          ref={inputRef}
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); send(input); } }}
@@ -383,6 +386,32 @@ function ChatPanel() {
           <Send size={16} />
         </button>
       </div>
+    </motion.div>
+  );
+}
+
+function ScrollIndicator() {
+  const [hidden, setHidden] = useState(false);
+  useEffect(() => {
+    const onScroll = () => { if (window.scrollY > 100) setHidden(true); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: hidden ? 0 : 1 }}
+      transition={{ delay: 3, duration: 1 }}
+      className="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none select-none"
+    >
+      <span className="text-[10px] tracking-[0.35em] font-mono text-white/60 uppercase">scroll</span>
+      <motion.div
+        animate={{ y: [0, 6, 0] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+        className="text-white/60"
+      >
+        <ChevronDown size={20} />
+      </motion.div>
     </motion.div>
   );
 }
@@ -533,6 +562,8 @@ export default function Landing() {
             <Mail size={14} /> {LINKS.social.email}
           </a>
         </motion.div>
+
+        <ScrollIndicator />
       </div>
 
       {/* --- SECTION 2: WHO ARE YOU + ASK ABOUT ME --- */}
