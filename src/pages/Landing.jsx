@@ -265,7 +265,7 @@ function ChatPanel() {
       const res = await fetch(`${aiUrl}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: msg, history: messages, persona: 'recruiter', mode }),
+        body: JSON.stringify({ message: msg, history: messages, persona: 'recruiter', mode, token: SESSION_TOKEN, session_id: SESSION_ID }),
       });
       if (!res.ok) throw new Error('non-ok');
       const { reply } = await res.json();
