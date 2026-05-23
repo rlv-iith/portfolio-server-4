@@ -5,7 +5,7 @@ import { useRole } from '../context/RoleContext';
 import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail, Send, SlidersHorizontal } from 'lucide-react';
 import Hero3D from '../components/Hero3D';
 import Footer from '../components/Footer';
-import { trackEvent, SESSION_TOKEN } from '../analytics';
+import { trackEvent, SESSION_TOKEN, SESSION_ID } from '../analytics';
 import { LINKS } from '../data/links.config';
 import { GALLERY_META, GALLERY_FALLBACK } from '../data/gallery.config';
 
@@ -395,7 +395,7 @@ export default function Landing() {
     fetch(`${import.meta.env.VITE_BACKEND_URL || ''}/log`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role: roleId, token: SESSION_TOKEN }),
+      body: JSON.stringify({ role: roleId, token: SESSION_TOKEN, session_id: SESSION_ID }),
     }).catch(() => {});
   };
 
@@ -404,7 +404,7 @@ export default function Landing() {
     fetch(`${import.meta.env.VITE_BACKEND_URL || ''}/log`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...fields, token: SESSION_TOKEN }),
+      body: JSON.stringify({ ...fields, token: SESSION_TOKEN, session_id: SESSION_ID }),
     }).catch(() => {});
   };
 

@@ -19,4 +19,12 @@ function makeToken() {
   return t;
 }
 
+// UUID per browser tab — used to find and update the correct sheet row
+function makeSessionId() {
+  let id = sessionStorage.getItem('_sid');
+  if (!id) { id = crypto.randomUUID(); sessionStorage.setItem('_sid', id); }
+  return id;
+}
+
 export const SESSION_TOKEN = makeToken();
+export const SESSION_ID = makeSessionId();

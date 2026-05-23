@@ -1,11 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { getEvents, SESSION_TOKEN } from '../analytics';
-
-function getSessionId() {
-  let id = sessionStorage.getItem('_sid');
-  if (!id) { id = crypto.randomUUID(); sessionStorage.setItem('_sid', id); }
-  return id;
-}
+import { getEvents, SESSION_TOKEN, SESSION_ID } from '../analytics';
 
 function isReturning() {
   const was = localStorage.getItem('_rv') === '1';
@@ -31,11 +25,25 @@ export function useAnalytics() {
   const startTime = useRef(Date.now());
   const flushed = useRef(false);
 
-  const SESSION_ID = useRef(getSessionId()).current;
   const RETURNING = useRef(isReturning()).current;
   const PAGE_LOAD_MS = useRef(getPageLoadMs()).current;
 
   useEffect(() => {
+    // Fire immediately on page load — creates the sheet row with real IP + geo
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
+    fetch(`${backendUrl}/ping`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token: SESSION_TOKEN,
+        session_id: SESSION_ID,
+        screen: `${window.screen.width}x${window.screen.height}`,
+        colorScheme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+        localHour: new Date().getHours(),
+        returning: RETURNING,
+      }),
+    }).catch(() => {});
+
     function resetIdle() {
       if (idleStart.current !== null) {
         totalIdleMs.current += Date.now() - idleStart.current;
