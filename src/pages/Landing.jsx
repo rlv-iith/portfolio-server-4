@@ -2,12 +2,13 @@
 import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { useRole } from '../context/RoleContext';
-import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail, Send, SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail, Send, SlidersHorizontal, ChevronDown, ExternalLink } from 'lucide-react';
 import Hero3D from '../components/Hero3D';
 import Footer from '../components/Footer';
 import { trackEvent, SESSION_TOKEN, SESSION_ID } from '../analytics';
 import { LINKS } from '../data/links.config';
 import { GALLERY_META, GALLERY_FALLBACK } from '../data/gallery.config';
+import { content } from '../data/projectData';
 
 // Auto-import every image dropped into src/assets/gallery/ ─────────────────
 // To add a photo: drop it in that folder, then add metadata in gallery.config.js
@@ -47,9 +48,9 @@ const PersonaCard = ({ card, index, onSelect }) => (
     transition={{ delay: 0.5 + index * 0.1, type: "tween", duration: 0.4 }}
     onClick={() => onSelect(card.id)}
     whileHover={{ scale: 1.05, x: card.position === 'left' ? 10 : -10 }}
-    className={`glass-panel group relative w-full max-w-[350px] min-h-[240px] p-6 rounded-3xl text-left transition-all duration-300 hover:bg-white/10 ${card.border} border ${card.glow} shadow-lg hover:shadow-2xl`}
+    className={`glass-panel group relative w-full p-6 rounded-3xl text-left transition-all duration-300 hover:bg-white/10 ${card.border} border ${card.glow} shadow-lg hover:shadow-2xl`}
   >
-    <div className="flex flex-col h-full justify-between">
+    <div className="flex flex-col gap-4">
       <div className="flex items-start justify-between mb-4">
         <div className="p-3 bg-white/5 rounded-xl text-white group-hover:scale-110 transition-transform">
           {card.icon}
@@ -213,6 +214,39 @@ function VisitorForm({ onSubmit }) {
     </motion.div>
   );
 }
+
+const DEPLOYABLES = [
+  {
+    name: "Portfolio AI Brain",
+    desc: "FastAPI · RAG · Multi-LLM",
+    github: LINKS.social.github,
+    deploy: LINKS.services.frontend,
+  },
+  {
+    name: "Credit Risk AI",
+    desc: "XGBoost · SHAP · Docker",
+    github: LINKS.projects["fintech-ai"].github,
+    deploy: null,
+  },
+  {
+    name: "3D Synthetic Data Engine",
+    desc: "Blender · Python · LiDAR",
+    github: LINKS.projects["mitsubishi"].github,
+    deploy: null,
+  },
+  {
+    name: "AI Textbook Tutor",
+    desc: "LangChain · RAG · Streamlit",
+    github: LINKS.projects["ibm-agent"].github,
+    deploy: null,
+  },
+  {
+    name: "AxiDraw Automation",
+    desc: "Python · G-Code · Hardware",
+    github: LINKS.projects["electrochem"].github,
+    deploy: null,
+  },
+];
 
 const SUGGESTED = [
   "What has he built?",
@@ -390,31 +424,6 @@ function ChatPanel() {
   );
 }
 
-function ScrollIndicator() {
-  const [hidden, setHidden] = useState(false);
-  useEffect(() => {
-    const onScroll = () => { if (window.scrollY > 100) setHidden(true); };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: hidden ? 0 : 1 }}
-      transition={{ delay: 3, duration: 1 }}
-      className="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none select-none"
-    >
-      <span className="text-[10px] tracking-[0.35em] font-mono text-white/60 uppercase">scroll</span>
-      <motion.div
-        animate={{ y: [0, 6, 0] }}
-        transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-        className="text-white/60"
-      >
-        <ChevronDown size={20} />
-      </motion.div>
-    </motion.div>
-  );
-}
 
 export default function Landing() {
   const { setRole } = useRole();
@@ -444,7 +453,7 @@ export default function Landing() {
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_10%,black_100%)] z-0 pointer-events-none opacity-40" />
 
       {/* --- SECTION 1: HERO & PERSONAS --- */}
-      <div data-section="hero" className="z-10 w-full flex flex-col items-center min-h-screen pt-8 pb-12 px-4 md:px-12 relative">
+      <div data-section="hero" className="z-10 w-full flex flex-col items-center pt-8 pb-16 px-4 md:px-12 relative">
         
         {/* HEADER */}
         <motion.div 
@@ -465,28 +474,24 @@ export default function Landing() {
         </motion.div>
 
         {/* WIDE SPLIT LAYOUT */}
-        <div className="w-full flex flex-col md:flex-row justify-between items-stretch flex-grow mt-8 max-w-[1600px]">
+        <div className="w-full flex flex-col md:flex-row justify-between items-start mt-4 max-w-[1600px]">
 
-          {/* LEFT — About Me */}
-          <div className="w-full md:w-1/4 pl-0 md:pl-8 flex items-center py-4">
+          {/* LEFT — About Me + Experience */}
+          <div className="w-full md:w-1/4 pl-0 md:pl-8 flex flex-col gap-6 py-4">
+
+            {/* WHO AM I */}
             <motion.div
               initial={{ opacity: 0, x: -60 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              className="glass-panel w-full h-full min-h-[320px] p-6 rounded-3xl border border-white/10 flex flex-col gap-4"
+              className="glass-panel w-full p-6 rounded-3xl border border-white/10 flex flex-col gap-4"
             >
               <span className="text-xs tracking-[0.3em] text-gray-500 uppercase font-mono">Who Am I</span>
-              <div className="flex flex-col gap-4 flex-grow justify-between">
+              <div className="flex flex-col gap-4">
                 <div>
                   <p className="text-sm text-gray-400 font-mono">B.Tech Industrial Chemistry</p>
                   <p className="text-base font-bold text-white brand-font">IIT Hyderabad</p>
                   <p className="text-sm text-blue-400 font-mono mt-0.5">2023 – 2027 · CGPA 7.99</p>
-                </div>
-                <div className="h-[1px] bg-white/10" />
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Targeting</p>
-                  <p className="text-sm text-white font-mono">AI Engineering</p>
-                  <p className="text-sm text-white font-mono">Data Science</p>
                 </div>
                 <div className="h-[1px] bg-white/10" />
                 <div>
@@ -505,13 +510,36 @@ export default function Landing() {
                 </div>
               </div>
             </motion.div>
+
+            {/* EXPERIENCE */}
+            <motion.div
+              initial={{ opacity: 0, x: -60 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="glass-panel w-full p-6 rounded-3xl border border-white/10 flex flex-col gap-3"
+            >
+              <span className="text-xs tracking-[0.3em] text-gray-500 uppercase font-mono">Experience</span>
+              {content.resume.experience.map((exp, i) => (
+                <div key={i} className="flex items-start justify-between gap-2 group">
+                  <div className="flex items-start gap-2 min-w-0">
+                    <span className="w-1 h-1 rounded-full bg-blue-500/50 flex-shrink-0 mt-[5px] group-hover:bg-blue-400 transition-colors" />
+                    <div className="min-w-0">
+                      <p className="text-xs text-white font-mono leading-snug group-hover:text-blue-300 transition-colors">{exp.role}</p>
+                      <p className="text-[10px] text-gray-500 font-mono leading-snug truncate">{exp.company.split('(')[0].trim()}</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] text-gray-600 font-mono flex-shrink-0 mt-0.5">{exp.duration.split('–')[0].trim()}</span>
+                </div>
+              ))}
+            </motion.div>
+
           </div>
 
           {/* CENTER — 3D passthrough */}
           <div className="hidden md:block md:w-2/4" />
 
           {/* RIGHT — Achievements top · Recruiter bottom */}
-          <div className="w-full md:w-1/4 pr-0 md:pr-8 flex flex-col justify-between gap-6 py-4">
+          <div className="w-full md:w-1/4 pr-0 md:pr-8 flex flex-col justify-start gap-6 pt-2 pb-4">
 
             {/* ACHIEVEMENTS */}
             <motion.div
@@ -539,31 +567,6 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* Contact Line */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-8 flex items-center gap-6 opacity-60 hover:opacity-100 transition-opacity"
-        >
-          <a href={LINKS.social.github} target="_blank" rel="noreferrer"
-            onClick={() => trackEvent('link_click', { label: 'GitHub' })}
-            className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors">
-            <Github size={14} /> GitHub
-          </a>
-          <span className="text-white/20">|</span>
-          <a href={LINKS.social.linkedin} target="_blank" rel="noreferrer"
-            onClick={() => trackEvent('link_click', { label: 'LinkedIn' })}
-            className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-blue-400 transition-colors">
-            <Linkedin size={14} /> LinkedIn
-          </a>
-          <span className="text-white/20">|</span>
-          <a href={`mailto:${LINKS.social.email}`}
-            onClick={() => trackEvent('link_click', { label: 'Email' })}
-            className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors">
-            <Mail size={14} /> {LINKS.social.email}
-          </a>
-        </motion.div>
-
-        <ScrollIndicator />
       </div>
 
       {/* --- SECTION 2: WHO ARE YOU + ASK ABOUT ME --- */}
@@ -582,6 +585,59 @@ export default function Landing() {
           {/* RIGHT — Ask about me */}
           <ChatPanel />
 
+        </div>
+      </div>
+
+      {/* --- SECTION: DEPLOYABLES --- */}
+      <div data-section="deployables" className="z-10 w-full max-w-7xl px-6 py-20 border-t border-white/10 bg-black/80 backdrop-blur-xl">
+        <div className="flex items-center gap-4 mb-12">
+          <div className="h-[1px] bg-white/20 flex-grow" />
+          <h3 className="text-xl font-bold tracking-[0.3em] brand-font text-gray-400">DEPLOYABLES</h3>
+          <div className="h-[1px] bg-white/20 flex-grow" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {content.projects.map((proj) => {
+            const links = LINKS.projects[proj.id] || {};
+            return (
+              <motion.div
+                key={proj.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.4 }}
+                className="group border border-white/10 bg-white/5 rounded-xl p-6 hover:bg-white/10 transition-all hover:-translate-y-1"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <span className="text-[10px] font-mono text-blue-400 border border-blue-500/20 px-2 py-1 rounded bg-blue-500/5">{proj.category}</span>
+                  <div className="flex gap-3">
+                    <a href={links.github || LINKS.social.github} target="_blank" rel="noreferrer"
+                      onClick={() => trackEvent('project_github', { id: proj.id })}
+                      className="text-gray-500 hover:text-white transition-colors">
+                      <Github size={14} />
+                    </a>
+                    {links.demo ? (
+                      <a href={links.demo} target="_blank" rel="noreferrer"
+                        onClick={() => trackEvent('project_demo', { id: proj.id })}
+                        className="text-gray-500 hover:text-blue-400 transition-colors">
+                        <ExternalLink size={14} />
+                      </a>
+                    ) : (
+                      <span className="text-gray-700 cursor-not-allowed" title="Not deployed yet">
+                        <ExternalLink size={14} />
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <h3 className="font-bold text-lg text-white mb-2 group-hover:text-blue-300 transition-colors">{proj.title}</h3>
+                <p className="text-sm text-gray-400 leading-relaxed mb-4 min-h-[3rem]">{proj.descriptions.recruiter}</p>
+                <div className="flex flex-wrap gap-2 border-t border-white/5 pt-4">
+                  {proj.stack.map((tech) => (
+                    <span key={tech} className="text-[10px] text-gray-500 font-mono">#{tech}</span>
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
@@ -639,6 +695,50 @@ export default function Landing() {
                 </motion.div>
             ))}
         </div>
+      </div>
+
+      {/* --- SECTION: CONTACT --- */}
+      <div data-section="contact" className="z-10 w-full max-w-7xl px-6 py-20 border-t border-white/10 bg-black/80 backdrop-blur-xl">
+        <div className="flex items-center gap-4 mb-12">
+          <div className="h-[1px] bg-white/20 flex-grow" />
+          <h3 className="text-xl font-bold tracking-[0.3em] brand-font text-gray-400">CONTACT</h3>
+          <div className="h-[1px] bg-white/20 flex-grow" />
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12"
+        >
+          <a href={LINKS.social.github} target="_blank" rel="noreferrer"
+            onClick={() => trackEvent('link_click', { label: 'GitHub' })}
+            className="glass-panel flex items-center gap-3 px-8 py-4 rounded-2xl border border-white/10 text-gray-400 hover:text-white hover:border-white/30 transition-all group">
+            <Github size={20} className="group-hover:scale-110 transition-transform" />
+            <div>
+              <p className="text-xs text-gray-500 font-mono uppercase tracking-widest">GitHub</p>
+              <p className="text-sm font-bold text-white font-mono">rlv-iith</p>
+            </div>
+          </a>
+          <a href={LINKS.social.linkedin} target="_blank" rel="noreferrer"
+            onClick={() => trackEvent('link_click', { label: 'LinkedIn' })}
+            className="glass-panel flex items-center gap-3 px-8 py-4 rounded-2xl border border-white/10 text-gray-400 hover:text-blue-400 hover:border-blue-500/30 transition-all group">
+            <Linkedin size={20} className="group-hover:scale-110 transition-transform" />
+            <div>
+              <p className="text-xs text-gray-500 font-mono uppercase tracking-widest">LinkedIn</p>
+              <p className="text-sm font-bold text-white font-mono">Ramuni Lalith Vishnu</p>
+            </div>
+          </a>
+          <a href={`mailto:${LINKS.social.email}`}
+            onClick={() => trackEvent('link_click', { label: 'Email' })}
+            className="glass-panel flex items-center gap-3 px-8 py-4 rounded-2xl border border-white/10 text-gray-400 hover:text-white hover:border-white/30 transition-all group">
+            <Mail size={20} className="group-hover:scale-110 transition-transform" />
+            <div>
+              <p className="text-xs text-gray-500 font-mono uppercase tracking-widest">Email</p>
+              <p className="text-sm font-bold text-white font-mono">{LINKS.social.email}</p>
+            </div>
+          </a>
+        </motion.div>
       </div>
 
       <Footer />
