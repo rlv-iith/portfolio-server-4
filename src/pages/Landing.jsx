@@ -332,7 +332,7 @@ function ChatPanel() {
             Powered by LLM ·{' '}
             <span className="text-blue-400 text-xs">{mode}</span>
           </p>
-          <p className="text-[10px] text-gray-600 font-mono mt-0.5 italic">Tip: responses are tuned for recruiters — concise & to the point.</p>
+          <p className="text-[10px] text-gray-600 font-mono mt-0.5 italic"></p>
         </div>
         <button
           onClick={() => setShowModes(v => !v)}
@@ -610,7 +610,7 @@ export default function Landing() {
         <div className="flex items-center gap-4 mb-12">
           <div className="h-[1px] bg-white/20 flex-grow" />
           <h3 className="text-xl font-bold tracking-[0.3em] brand-font text-gray-400">INTERACT</h3>
-          <div className="h-[1px] bg-white/20 flex-grow" />s
+          <div className="h-[1px] bg-white/20 flex-grow" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
