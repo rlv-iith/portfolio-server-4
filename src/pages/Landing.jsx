@@ -640,7 +640,7 @@ export default function Landing() {
         <div className="relative">
           {/* Maintenance overlay */}
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-xl backdrop-blur-md bg-black/60 border border-white/10">
-            <span className="text-2xl mb-3">🚀</span>
+            <span className="text-2xl mb-3">🛠️</span>
             <p className="text-white font-bold brand-font tracking-widest text-lg">LIVE DEMOS ROLLING OUT</p>
             <p className="text-xs text-gray-400 font-mono mt-1">Deployments in progress — check back soon</p>
           </div>
