@@ -15,7 +15,7 @@ export const content = {
   headers: {
     recruiter: {
       title: "CANDIDATE PROFILE",
-      tagline: "Building scalable AI applications and data-driven systems.",
+      // tagline: "Building scalable AI applications and data-driven systems.",
       bio: "IIT Hyderabad Undergraduate (Industrial Chemistry + CS). Built MCP server infrastructure at Stremly, researching at IISc Bangalore, and shipped end-to-end AI pipelines — from containerized ML models to LLM agent tooling.",
       color: "text-blue-400",
       border: "border-blue-500/50",

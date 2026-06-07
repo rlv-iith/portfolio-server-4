@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useRole } from '../context/RoleContext';
 import { content } from '../data/projectData';
 import {
     ArrowLeft, Github, FileText, GraduationCap, Briefcase,
-    Trophy, Code, Users, Cpu, Medal, MapPin
+    Trophy, Code, Users, Cpu, Medal, MapPin, Send
 } from 'lucide-react';
+import { LINKS } from '../data/links.config';
 import { trackEvent } from '../analytics';
 import Footer from '../components/Footer';
 
@@ -42,18 +44,62 @@ const TechProfileImage = ({ src }) => (
 
 export default function Recruiter() {
   const { setRole } = useRole();
-  const color = "blue"; 
-  const resume = content.resume; 
+  const color = "blue";
+  const resume = content.resume;
   const projects = content.projects;
+  const [cvToast, setCvToast] = useState(false);
 
   // These are now safe and will not crash
   const technicalSkills = resume.skills.core || [];
   const secondarySkills = [...(resume.skills.ai_data || []), ...(resume.skills.systems || [])];
 
+  async function handleCvRequest() {
+    const webhookUrl = import.meta.env.VITE_DISCORD_WEBHOOK_URL;
+    if (webhookUrl) {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          embeds: [{
+            title: '⚠️ CV Request Received',
+            description: 'Someone on your portfolio has requested your **latest CV**.',
+            color: 0xF5A623,
+            fields: [
+              { name: '📋 Action Required', value: 'Send your latest CV within **24 hours**', inline: false },
+              { name: '🌐 Source', value: 'Recruiter Dashboard · Portfolio', inline: true },
+              { name: '🕐 Time', value: new Date().toUTCString(), inline: true },
+            ],
+            footer: { text: 'Portfolio AI Brain · CV Request Alert' },
+            thumbnail: { url: 'https://cdn3.emoji.gg/emojis/4790-caution.png' },
+          }],
+        }),
+      }).catch(() => {});
+    }
+    trackEvent('cv_request');
+    setCvToast(true);
+    setTimeout(() => setCvToast(false), 4000);
+  }
+
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500/30">
-      
+
+      {/* CV request toast */}
+      <motion.div
+        initial={{ opacity: 0, x: 40 }}
+        animate={{ opacity: cvToast ? 1 : 0, x: cvToast ? 0 : 40 }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-6 right-6 z-50 pointer-events-none"
+      >
+        <div className="flex flex-col items-center gap-2 px-6 py-4 rounded-2xl border border-yellow-500/40 bg-black/95 backdrop-blur-md shadow-[0_0_30px_rgba(234,179,8,0.2)]">
+          <Send size={18} className="text-yellow-400" />
+          <p className="text-sm font-bold brand-font text-white tracking-widest text-center">REQUEST SENT</p>
+          <p className="text-xs font-mono text-yellow-300 text-center leading-relaxed">
+            Lalith has been notified and will<br />share the CV within <span className="text-white font-bold">24 hours</span>
+          </p>
+        </div>
+      </motion.div>
+
       {/* NAV */}
       <nav className="fixed top-0 left-0 w-full h-16 bg-black/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-6 z-50">
         <div className="flex items-center gap-4">
@@ -64,12 +110,18 @@ export default function Recruiter() {
                 <span className="text-blue-400">RECRUITER</span> DASHBOARD
             </div>
         </div>
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-3">
             <a href="/Lalith_Vishnu_Resume.pdf" download
                 onClick={() => trackEvent('resume_download')}
                 className="flex items-center gap-2 px-4 py-1.5 text-xs font-bold text-blue-400 border border-blue-500/30 rounded bg-blue-500/10 hover:bg-blue-500/20 transition-all">
                 <FileText size={14} /> DOWNLOAD CV
             </a>
+            <button
+                onClick={handleCvRequest}
+                className="flex items-center gap-2 px-4 py-1.5 text-xs font-bold text-yellow-400 border border-yellow-500/30 rounded bg-yellow-500/10 hover:bg-yellow-500/20 transition-all"
+            >
+                <Send size={14} /> REQUEST LATEST CV
+            </button>
         </div>
       </nav>
 

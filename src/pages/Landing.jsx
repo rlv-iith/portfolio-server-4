@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { useRole } from '../context/RoleContext';
-import { Briefcase, /* FlaskConical, */ ArrowRight, Heart, Medal, Star, Github, Linkedin, Mail, Send, SlidersHorizontal, ChevronDown, ExternalLink } from 'lucide-react';
+import { Briefcase, /* FlaskConical, */ ArrowRight, GraduationCap, Medal, Star, Github, Linkedin, Mail, Send, SlidersHorizontal, ChevronDown, ExternalLink, Lock } from 'lucide-react';
 import Hero3D from '../components/Hero3D';
 import Footer from '../components/Footer';
 import { trackEvent, SESSION_TOKEN, SESSION_ID } from '../analytics';
@@ -34,19 +34,19 @@ const achievements = [
   { label: "AIR 13665", sub: "JEE Advanced", color: "text-gray-300" },
 ];
 const extras = [
-  { title: "NATIONAL SOCIAL SERVICE", subtitle: "100+ HOURS SERVICE", icon: <Heart size={24} />, desc: "Community leadership & social impact initiatives.", color: "text-rose-400", border: "border-rose-500/30" },
-  { title: "NATIONAL CADET CORPS", subtitle: "CADET / DISCIPLINE", icon: <Medal size={24} />, desc: "Military training, leadership & team coordination.", color: "text-yellow-400", border: "border-yellow-500/30" },
+  { title: "NATIONAL SOCIAL SERVICE", subtitle: "100+ HOURS SERVICE", icon: <GraduationCap size={24} />, desc: "Community leadership & social impact initiatives.", color: "text-rose-400", border: "border-rose-500/30" },
+  { title: "NATIONAL CADET CORPS", subtitle: "CADET / DISCIPLINE", icon: <Medal size={24} />, desc: "Leadership & team coordination.", color: "text-yellow-400", border: "border-yellow-500/30" },
   { title: "SHOTOKAN KARATE", subtitle: "BLACK BELT (SHODAN)", icon: <Star size={24} />, desc: "National Player. Focus, discipline & perseverance.", color: "text-white", border: "border-white/30" },
 ];
 
 // REUSABLE PERSONA CARD COMPONENT
-const PersonaCard = ({ card, index, onSelect }) => (
+const PersonaCard = ({ card, index, onSelect, locked, onLockedClick }) => (
   <motion.button
     key={card.id}
     initial={{ opacity: 0, x: card.position === 'left' ? -100 : 100 }}
     animate={{ opacity: 1, x: 0 }}
     transition={{ delay: 0.5 + index * 0.1, type: "tween", duration: 0.4 }}
-    onClick={() => onSelect(card.id)}
+    onClick={() => locked ? onLockedClick() : onSelect(card.id)}
     whileHover={{ scale: 1.05, x: card.position === 'left' ? 10 : -10 }}
     className={`glass-panel group relative w-full p-6 rounded-3xl text-left transition-all duration-300 hover:bg-white/10 ${card.border} border ${card.glow} shadow-lg hover:shadow-2xl`}
   >
@@ -67,9 +67,15 @@ const PersonaCard = ({ card, index, onSelect }) => (
           {card.desc}
         </p>
       </div>
-      <div className="text-blue-400 text-xs font-bold pt-4 mt-auto flex items-center gap-2 group-hover:text-white transition-colors">
-        INITIALIZE_ <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform"/>
-      </div>
+      {locked ? (
+        <div className="text-yellow-500/70 text-xs font-bold pt-4 mt-auto flex items-center gap-2">
+          <Lock size={11} /> FILL FORM BELOW TO UNLOCK_
+        </div>
+      ) : (
+        <div className="text-blue-400 text-xs font-bold pt-4 mt-auto flex items-center gap-2 group-hover:text-white transition-colors">
+          INITIALIZE_ <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform"/>
+        </div>
+      )}
     </div>
   </motion.button>
 );
@@ -144,7 +150,7 @@ const GalleryCollage = () => {
 
 const FIELD_CLASS = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition-colors";
 
-function VisitorForm({ onSubmit }) {
+function VisitorForm({ onSubmit, highlight }) {
   const [form, setForm] = useState({ name: '', role: '', company: '', purpose: '', feedback: '' });
   const [submitted, setSubmitted] = useState(false);
 
@@ -162,7 +168,7 @@ function VisitorForm({ onSubmit }) {
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5 }}
-      className="glass-panel p-6 rounded-3xl border border-white/10 flex flex-col gap-6"
+      className={`glass-panel p-6 rounded-3xl border flex flex-col gap-6 transition-all duration-500 ${highlight ? 'border-yellow-400/60 shadow-[0_0_24px_rgba(234,179,8,0.2)]' : 'border-white/10'}`}
     >
       <div>
         <span className="text-xs tracking-[0.3em] text-gray-500 uppercase font-mono">Who are you?</span>
@@ -427,6 +433,18 @@ function ChatPanel() {
 
 export default function Landing() {
   const { setRole } = useRole();
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [highlightForm, setHighlightForm] = useState(false);
+  const [showUnlockToast, setShowUnlockToast] = useState(false);
+  const interactRef = useRef(null);
+
+  const handleLockedClick = () => {
+    interactRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setHighlightForm(true);
+    setShowUnlockToast(true);
+    setTimeout(() => setHighlightForm(false), 2000);
+    setTimeout(() => setShowUnlockToast(false), 3500);
+  };
 
   const handleSelect = (roleId) => {
     setRole(roleId);
@@ -438,6 +456,7 @@ export default function Landing() {
   };
 
   const handleVisitorSubmit = (fields) => {
+    setFormSubmitted(true);
     trackEvent('visitor_form', { role: fields.role });
     fetch(`${import.meta.env.VITE_BACKEND_URL || ''}/log`, {
       method: 'POST',
@@ -448,7 +467,23 @@ export default function Landing() {
 
   return (
     <div className="relative w-full min-h-screen bg-black text-white overflow-x-hidden flex flex-col items-center">
-      
+
+      {/* Unlock toast */}
+      <motion.div
+        initial={{ opacity: 0, x: 40 }}
+        animate={{ opacity: showUnlockToast ? 1 : 0, x: showUnlockToast ? 0 : 40 }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-6 right-6 z-50 pointer-events-none"
+      >
+        <div className="flex flex-col items-center gap-3 px-10 py-6 rounded-3xl border border-yellow-500/40 bg-black/95 backdrop-blur-md shadow-[0_0_40px_rgba(234,179,8,0.2)]">
+          <Lock size={22} className="text-yellow-400" />
+          <p className="text-lg font-bold brand-font text-white tracking-widest text-center">ACCESS LOCKED</p>
+          <p className="text-sm font-mono text-yellow-300 text-center">
+            Fill out the <span className="text-white font-bold">Interact form</span> below to unlock
+          </p>
+        </div>
+      </motion.div>
+
       <div className="fixed inset-0 z-0"><Hero3D /></div>
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_10%,black_100%)] z-0 pointer-events-none opacity-40" />
 
@@ -561,7 +596,7 @@ export default function Landing() {
 
             {/* RECRUITER CARD */}
             {cards.map((card, index) => (
-              <PersonaCard key={card.id} card={card} index={index} onSelect={handleSelect} />
+              <PersonaCard key={card.id} card={card} index={index} onSelect={handleSelect} locked={!formSubmitted} onLockedClick={handleLockedClick} />
             ))}
 
           </div>
@@ -570,7 +605,7 @@ export default function Landing() {
       </div>
 
       {/* --- SECTION 2: WHO ARE YOU + ASK ABOUT ME --- */}
-      <div data-section="interact" className="z-10 w-full max-w-7xl px-6 py-20 border-t border-white/10 bg-black/80 backdrop-blur-xl">
+      <div ref={interactRef} data-section="interact" className="z-10 w-full max-w-7xl px-6 py-20 border-t border-white/10 bg-black/80 backdrop-blur-xl">
         <div className="flex items-center gap-4 mb-12">
           <div className="h-[1px] bg-white/20 flex-grow" />
           <h3 className="text-xl font-bold tracking-[0.3em] brand-font text-gray-400">INTERACT</h3>
@@ -580,12 +615,18 @@ export default function Landing() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* LEFT — Who are you? */}
-          <VisitorForm onSubmit={handleVisitorSubmit} />
+          <VisitorForm onSubmit={handleVisitorSubmit} highlight={highlightForm} />
 
           {/* RIGHT — Ask about me */}
           <ChatPanel />
 
         </div>
+
+        {/* Disclaimer */}
+        <p className="mt-6 text-center text-[10px] text-gray-600 font-mono leading-relaxed max-w-2xl mx-auto border border-white/5 rounded-xl px-4 py-3 bg-white/2">
+          ⚠ LLMs can make mistakes — always verify important information independently.
+          <span className="text-yellow-600/70"> LOCAL SLM mode & on-device LLM deployment are in beta testing</span> and may be unavailable or unstable.
+        </p>
       </div>
 
       {/* --- SECTION: DEPLOYABLES --- */}
@@ -595,6 +636,13 @@ export default function Landing() {
           <h3 className="text-xl font-bold tracking-[0.3em] brand-font text-gray-400">DEPLOYABLES</h3>
           <div className="h-[1px] bg-white/20 flex-grow" />
         </div>
+        <div className="relative">
+          {/* Maintenance overlay */}
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-xl backdrop-blur-md bg-black/60 border border-white/10">
+            <span className="text-2xl mb-3">🔧</span>
+            <p className="text-white font-bold brand-font tracking-widest text-lg">UNDER MAINTENANCE</p>
+            <p className="text-xs text-gray-400 font-mono mt-1">Live demos & deploys coming soon</p>
+          </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {content.projects.map((proj) => {
             const links = LINKS.projects[proj.id] || {};
@@ -638,6 +686,7 @@ export default function Landing() {
               </motion.div>
             );
           })}
+        </div>
         </div>
       </div>
 
