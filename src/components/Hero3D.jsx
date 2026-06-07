@@ -116,7 +116,7 @@ function CodingAtom() {
             color="#a855f7" 
             radius={1.8} 
             speed={0.4} 
-            codes={['torch.load', 'Agent', 'Optimize']}
+            codes={['RAG', 'Agent', 'Optimize']}
         />
 
         {/* Ring 3: Code (Cyan) - Flat Y */}

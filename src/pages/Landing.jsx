@@ -332,6 +332,7 @@ function ChatPanel() {
             Powered by LLM ·{' '}
             <span className="text-blue-400 text-xs">{mode}</span>
           </p>
+          <p className="text-[10px] text-gray-600 font-mono mt-0.5 italic">Tip: responses are tuned for recruiters — concise & to the point.</p>
         </div>
         <button
           onClick={() => setShowModes(v => !v)}
@@ -609,7 +610,7 @@ export default function Landing() {
         <div className="flex items-center gap-4 mb-12">
           <div className="h-[1px] bg-white/20 flex-grow" />
           <h3 className="text-xl font-bold tracking-[0.3em] brand-font text-gray-400">INTERACT</h3>
-          <div className="h-[1px] bg-white/20 flex-grow" />
+          <div className="h-[1px] bg-white/20 flex-grow" />s
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -639,9 +640,9 @@ export default function Landing() {
         <div className="relative">
           {/* Maintenance overlay */}
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-xl backdrop-blur-md bg-black/60 border border-white/10">
-            <span className="text-2xl mb-3">🔧</span>
-            <p className="text-white font-bold brand-font tracking-widest text-lg">UNDER MAINTENANCE</p>
-            <p className="text-xs text-gray-400 font-mono mt-1">Live demos & deploys coming soon</p>
+            <span className="text-2xl mb-3">🚀</span>
+            <p className="text-white font-bold brand-font tracking-widest text-lg">LIVE DEMOS ROLLING OUT</p>
+            <p className="text-xs text-gray-400 font-mono mt-1">Deployments in progress — check back soon</p>
           </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {content.projects.map((proj) => {
