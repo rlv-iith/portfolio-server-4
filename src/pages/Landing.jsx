@@ -36,7 +36,7 @@ const achievements = [
 const extras = [
   { title: "NATIONAL SOCIAL SERVICE", subtitle: "100+ HOURS SERVICE", icon: <GraduationCap size={24} />, desc: "Community leadership & social impact initiatives.", color: "text-rose-400", border: "border-rose-500/30" },
   { title: "NATIONAL CADET CORPS", subtitle: "CADET / DISCIPLINE", icon: <Medal size={24} />, desc: "Leadership & team coordination.", color: "text-yellow-400", border: "border-yellow-500/30" },
-  { title: "SHOTOKAN KARATE", subtitle: "BLACK BELT (SHODAN)", icon: <Star size={24} />, desc: "National Player. Focus, discipline & perseverance.", color: "text-white", border: "border-white/30" },
+  { title: "PHOTOGRAPHER", subtitle: "NATURE / EVENTS", icon: <Star size={24} />, desc: "Love to capture movements — nature, wildlife & live events.", color: "text-white", border: "border-white/30" },
 ];
 
 // REUSABLE PERSONA CARD COMPONENT
