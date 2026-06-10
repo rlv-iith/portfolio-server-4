@@ -31,7 +31,7 @@ const achievements = [
   { label: "Cash Prize Winner", sub: "Mitsubishi 3D Tech 2024", color: "text-yellow-400" },
   { label: "Research Intern", sub: "IISc Bangalore", color: "text-blue-400" },
   { label: "Under-review Paper", sub: "Micro-supercapacitors · ElectroChem", color: "text-emerald-400" },
-  { label: "AIR 13665", sub: "JEE Advanced", color: "text-gray-300" },
+  { label: "Top 1.2% Nationally", sub: "1.1M+ aspirants · JEE", color: "text-gray-300" },
 ];
 const extras = [
   { title: "NATIONAL SOCIAL SERVICE", subtitle: "100+ HOURS SERVICE", icon: <GraduationCap size={24} />, desc: "Community leadership & social impact initiatives.", color: "text-rose-400", border: "border-rose-500/30" },
